@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { PageHeader } from '../../components/PageHeader';
 import { Skeleton } from '../../components/Skeleton';
+import { SimulatedDataTag } from '../../components/SimulatedDataTag';
 import { WarRoomTopBar } from './WarRoomTopBar';
 import { FailureInjectionPanel } from './FailureInjectionPanel';
 import { PipelineWaterfall } from './PipelineWaterfall';
@@ -27,6 +28,7 @@ export const WarRoomPage: React.FC = () => {
   const activeEpoch = useArenaStore((s) => s.epoch);
   const failureMode = useArenaStore((s) => s.failureMode);
   const setStoreFailureMode = useArenaStore((s) => s.setFailureMode);
+  const connectionMode = useArenaStore((s) => s.connectionMode);
 
   // Active running experiment
   const experimentId = 'exp_running_01';
@@ -170,6 +172,14 @@ export const WarRoomPage: React.FC = () => {
         {liveAnnouncement}
       </div>
 
+      {/* Prominent Simulated Data Notice when operating in simulation mode */}
+      {connectionMode === 'simulated' && (
+        <SimulatedDataTag
+          variant="banner"
+          message="SIMULATED DATA: War Room gauges, event waterfall, and audit feed are running in local simulation mode."
+        />
+      )}
+
       {/* Document Page Header */}
       <PageHeader
         docId="DOC-WAR-04"
@@ -177,9 +187,12 @@ export const WarRoomPage: React.FC = () => {
         epoch={activeEpoch}
         timestamp={status?.updated_at}
         actions={
-          <span className="font-mono text-xs text-mut uppercase">
-            TARGET: <strong className="text-tx">{status?.target_model ?? 'Llama-3-8B-Q4'}</strong>
-          </span>
+          <div className="flex items-center gap-2">
+            <SimulatedDataTag />
+            <span className="font-mono text-xs text-mut uppercase">
+              TARGET: <strong className="text-tx">{status?.target_model ?? 'Llama-3-8B-Q4'}</strong>
+            </span>
+          </div>
         }
       />
 
@@ -235,17 +248,23 @@ export const WarRoomPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-4">
             {/* Row 2 Left: 7 Attribute Telemetry Gauges */}
             <div className="lg:col-span-5">
+              {connectionMode === 'live' && (
+                <div className="text-[11px] text-mut font-mono border border-bd/40 bg-s1 px-3 py-2 rounded mb-2 flex items-center justify-between">
+                  <span>LIVE BROKER: Real-time resource gauges (depth, memory, tokens/s) are not streamed by the local broker. Values shown are protocol bounded caps.</span>
+                  <span className="text-[10px] text-am font-bold uppercase tracking-wider shrink-0 ml-2">ILLUSTRATIVE DEFAULTS</span>
+                </div>
+              )}
               <TelemetryGauges
-                queueDepth={2}
+                queueDepth={connectionMode === 'live' ? undefined : 2}
                 maxQueue={4}
-                blueMemoryMb={512}
+                blueMemoryMb={connectionMode === 'live' ? undefined : 512}
                 maxMemoryMb={1024}
-                ttftMs={342}
-                tokensPerSec={28.4}
-                circuitBreakerViolations={0}
-                egressPacketsOut={0}
-                activeNetworkRules="Default Deny (Enforced)"
-                witnessWatermarkSeq={1402}
+                ttftMs={connectionMode === 'live' ? undefined : 342}
+                tokensPerSec={connectionMode === 'live' ? undefined : 28.4}
+                circuitBreakerViolations={connectionMode === 'live' ? undefined : 0}
+                egressPacketsOut={connectionMode === 'live' ? undefined : 0}
+                activeNetworkRules={connectionMode === 'live' ? undefined : 'Default Deny (Enforced)'}
+                witnessWatermarkSeq={connectionMode === 'live' ? undefined : 1402}
                 witnessStatus={witnessStatus}
                 failureMode={failureMode}
               />

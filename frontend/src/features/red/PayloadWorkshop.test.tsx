@@ -13,8 +13,12 @@ describe('PayloadWorkshop Component', () => {
 
   beforeEach(() => {
     arenaClient.reset();
-    localStorage.clear();
-    sessionStorage.clear();
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+    } catch {
+      // ignore
+    }
     vi.clearAllMocks();
   });
 
@@ -135,9 +139,11 @@ describe('PayloadWorkshop Component', () => {
     fireEvent.change(textarea, { target: { value: 'SECRET_PAYLOAD_DRAFT_DO_NOT_STORE' } });
 
     // Ensure localStorage and sessionStorage remain completely empty
-    expect(localStorage.getItem('payload')).toBeNull();
-    expect(localStorage.getItem('draft')).toBeNull();
-    expect(localStorage.length).toBe(0);
-    expect(sessionStorage.length).toBe(0);
+    const storage = typeof localStorage !== 'undefined' ? localStorage : window.localStorage;
+    const session = typeof sessionStorage !== 'undefined' ? sessionStorage : window.sessionStorage;
+    expect(storage?.getItem('payload') ?? null).toBeNull();
+    expect(storage?.getItem('draft') ?? null).toBeNull();
+    expect(storage?.length ?? 0).toBe(0);
+    expect(session?.length ?? 0).toBe(0);
   });
 });

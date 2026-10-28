@@ -4,7 +4,11 @@ test.describe('P13 Judge Demo Rehearsal E2E Walkthrough (DEMO.md)', () => {
   test.beforeEach(async ({ page }) => {
     // Reset to default operator role before starting rehearsal
     await page.addInitScript(() => {
-      localStorage.setItem('blindshield_role', 'operator');
+      if (!sessionStorage.getItem('blindshield_rehearsal_initialized')) {
+        localStorage.setItem('blindshield_role', 'operator');
+        localStorage.setItem('blindshield_connection_mode', 'simulated');
+        sessionStorage.setItem('blindshield_rehearsal_initialized', 'true');
+      }
     });
   });
 
@@ -13,7 +17,7 @@ test.describe('P13 Judge Demo Rehearsal E2E Walkthrough (DEMO.md)', () => {
     // STEP 1: Arena Setup & Broker-Controlled Ingestion
     // =========================================================================
     await page.goto('/setup');
-    await page.waitForLoadState('networkidle');
+    // Assert the visible UI below rather than waiting for background traffic to stop.
 
     // 1.1 Verify PageHeader and Stepper are mounted
     const headline = page.locator('h1');
@@ -40,7 +44,7 @@ test.describe('P13 Judge Demo Rehearsal E2E Walkthrough (DEMO.md)', () => {
 
     // 1.6 Navigate to War Room
     await page.goto('/war-room?arena=exp_running_01');
-    await page.waitForLoadState('networkidle');
+    // Assert the visible UI below rather than waiting for background traffic to stop.
 
     // =========================================================================
     // STEP 2: Live War Room & Cross-Team Role Boundary
@@ -61,7 +65,7 @@ test.describe('P13 Judge Demo Rehearsal E2E Walkthrough (DEMO.md)', () => {
     const roleGroup = page.getByRole('group', { name: 'Role selector' });
     await roleGroup.getByRole('button', { name: 'Red Team' }).click();
     await page.goto('/red');
-    await page.waitForLoadState('networkidle');
+    // Assert the visible UI below rather than waiting for background traffic to stop.
 
     await expect(page.locator('h1')).toContainText('RED TEAM OPERATIONAL PORTAL');
     await expect(page.locator('text=PAYLOAD COMMITMENT WORKSHOP')).toBeVisible();
@@ -70,12 +74,13 @@ test.describe('P13 Judge Demo Rehearsal E2E Walkthrough (DEMO.md)', () => {
     // 2.4 Switch Role to BLUE TEAM and inspect Blue Console
     await roleGroup.getByRole('button', { name: 'Blue Team' }).click();
     await page.goto('/blue');
-    await page.waitForLoadState('networkidle');
+    // Assert the visible UI below rather than waiting for background traffic to stop.
 
     await expect(page.locator('h1')).toContainText('BLUE TEAM DEFENSIVE CONSOLE');
     // Verify Sanitized Live Monitor is mounted and payload strings are withheld (Spec C-02)
     await expect(page.locator('text=02 — LIVE ROUND HEALTH MONITOR')).toBeVisible();
-    await expect(page.locator('text=SANITIZED TELEMETRY STREAM')).toBeVisible();
+    await expect(page.getByText('STATIC EMBARGOED PROJECTION (EmbargoedView)', { exact: true })).toBeVisible();
+    await expect(page.getByText('WITHHELD (C-02)', { exact: true })).toBeVisible();
 
     // =========================================================================
     // STEP 3: Failure Injection & Deterministic Invalidity
@@ -83,7 +88,7 @@ test.describe('P13 Judge Demo Rehearsal E2E Walkthrough (DEMO.md)', () => {
     // 3.1 Switch back to Operator and go to War Room
     await roleGroup.getByRole('button', { name: 'Operator' }).click();
     await page.goto('/war-room?arena=exp_running_01');
-    await page.waitForLoadState('networkidle');
+    // Assert the visible UI below rather than waiting for background traffic to stop.
 
     // 3.2 Inject Defense Timeout fault
     const timeoutBtn = page.getByRole('button', { name: /defense_timeout/i });
@@ -103,7 +108,7 @@ test.describe('P13 Judge Demo Rehearsal E2E Walkthrough (DEMO.md)', () => {
     // STEP 4: Cryptographic Evidence Export & Offline Verification
     // =========================================================================
     await page.goto('/evidence');
-    await page.waitForLoadState('networkidle');
+    // Assert the visible UI below rather than waiting for background traffic to stop.
 
     // 4.1 Verify Evidence Inspector header & trust anchors
     const evidenceHeading = page.locator('h1');
@@ -163,7 +168,7 @@ test.describe('P13 Judge Demo Rehearsal E2E Walkthrough (DEMO.md)', () => {
 
     // 5.4 Navigate to Benchmarks and verify claim discipline
     await page.goto('/benchmarks');
-    await page.waitForLoadState('networkidle');
+    // Assert the visible UI below rather than waiting for background traffic to stop.
 
     await expect(page.locator('h1')).toContainText('BENCHMARK ANALYTICS & CHANNEL CAPACITY');
     // Verify Attack Success Rate panel with 95% CI is present

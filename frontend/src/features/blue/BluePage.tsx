@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Shield, Layers, Radio } from 'lucide-react';
 import { PageHeader } from '../../components/PageHeader';
 import { ErrorState } from '../../components/ErrorState';
+import { SimulatedDataTag } from '../../components/SimulatedDataTag';
 import { useArenaStore } from '../../state/useArenaStore';
 import { arenaClient } from '../../lib/api/client';
 import { DefenseArtifactPanel } from './DefenseArtifactPanel';
@@ -11,6 +12,7 @@ import { ForensicWorkshopPanel } from './ForensicWorkshopPanel';
 
 export const BluePage: React.FC = () => {
   const currentRole = useArenaStore((state) => state.role);
+  const connectionMode = useArenaStore((state) => state.connectionMode);
 
   // Selected experiment for live monitoring (defaults to running arena)
   const [activeExpId, setActiveExpId] = useState<string>('exp_running_01');
@@ -84,12 +86,21 @@ export const BluePage: React.FC = () => {
 
   return (
     <div className="space-y-8">
+      {/* Prominent Simulated Data Notice when operating in simulation mode */}
+      {connectionMode === 'simulated' && (
+        <SimulatedDataTag
+          variant="banner"
+          message="SIMULATED DATA: Blue defense artifact envelopes, readiness probes, and forensic workshop running in-memory demo mode."
+        />
+      )}
+
       {/* Page Header with distinct Blue/Cobalt styling */}
       <div className="space-y-3">
         <PageHeader
           docId="DOC-BLUE-06"
           title="BLUE TEAM DEFENSIVE CONSOLE"
-          description="IMMUTABLE GUARDRAIL VAULT // ZERO-LEAKAGE LIVE TELEMETRY // FORENSIC WORKSHOP"
+          description="IMMUTABLE GUARDRAIL VAULT // BOUNDED COVERT-CHANNEL DEFENSIVE TELEMETRY // FORENSIC WORKSHOP"
+          actions={<SimulatedDataTag />}
         />
 
         {/* Console Context Strip */}

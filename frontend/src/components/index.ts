@@ -19,3 +19,5 @@ export * from './Toast';
 export * from './Skeleton';
 export * from './ErrorState';
 export * from './ErrorBoundary';
+export * from './SimulatedDataTag';
+export * from './RoleSwitcher';

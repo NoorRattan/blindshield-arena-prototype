@@ -1,5 +1,7 @@
 import React from 'react';
 import { PageHeader } from '../../components/PageHeader';
+import { SimulatedDataTag } from '../../components/SimulatedDataTag';
+import { useArenaStore } from '../../state/useArenaStore';
 import { useOverviewData } from './hooks/useOverviewData';
 import { MetricTiles } from './components/MetricTiles';
 import { ArenaRoster } from './components/ArenaRoster';
@@ -8,6 +10,9 @@ import { HeartbeatStrip } from './components/HeartbeatStrip';
 import { OverviewSkeleton } from './components/OverviewSkeleton';
 
 export const OverviewPage: React.FC = () => {
+  const activeEpoch = useArenaStore((state) => state.epoch);
+  const connectionMode = useArenaStore((state) => state.connectionMode);
+
   const {
     experiments,
     filteredExperiments,
@@ -27,15 +32,27 @@ export const OverviewPage: React.FC = () => {
     return <OverviewSkeleton />;
   }
 
+  const currentEpoch = experiments[0]?.epoch ?? activeEpoch;
+  const currentTimestamp = experiments[0]?.updated_at ?? '2026-10-28T12:00:00Z';
+
   return (
     <div className="space-y-6" data-testid="overview-page">
+      {/* Prominent Simulated Data Notice when operating in simulation mode */}
+      {connectionMode === 'simulated' && (
+        <SimulatedDataTag
+          variant="banner"
+          message="SIMULATED DATA: All metric aggregates, arenas, and alert feeds are generated in-memory. No live backend connected."
+        />
+      )}
+
       {/* Document-style Page Header */}
       <PageHeader
         docId="OVW-ARENA-01"
         title="ARENA ROSTER & INTEGRITY OVERVIEW"
         description="Executive assurance console for evaluation operators and auditors. Real-time tenant isolation status, verified cryptographic evidence bounds, and streaming tamper detection."
-        epoch={4}
-        timestamp="2026-10-19T08:15:37Z"
+        epoch={currentEpoch}
+        timestamp={currentTimestamp}
+        actions={<SimulatedDataTag />}
         status={
           <span className="text-cy uppercase tracking-wider font-mono text-xs font-semibold">
             ROLE: {role.toUpperCase()}

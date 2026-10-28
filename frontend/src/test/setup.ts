@@ -41,3 +41,64 @@ if (typeof window !== 'undefined' && !window.ResizeObserver) {
   }
   window.ResizeObserver = ResizeObserver;
 }
+
+// Polyfill in-memory Storage for Node 22+ environments where globalThis.localStorage is undefined
+class InMemoryStorage implements Storage {
+  private store: Record<string, string> = {};
+
+  get length(): number {
+    return Object.keys(this.store).length;
+  }
+
+  clear(): void {
+    this.store = {};
+  }
+
+  getItem(key: string): string | null {
+    return this.store[key] ?? null;
+  }
+
+  key(index: number): string | null {
+    return Object.keys(this.store)[index] ?? null;
+  }
+
+  removeItem(key: string): void {
+    delete this.store[key];
+  }
+
+  setItem(key: string, value: string): void {
+    this.store[key] = String(value);
+  }
+}
+
+try {
+  const mockLocalStorage = new InMemoryStorage();
+  const mockSessionStorage = new InMemoryStorage();
+
+  Object.defineProperty(globalThis, 'localStorage', {
+    value: mockLocalStorage,
+    configurable: true,
+    writable: true,
+  });
+
+  Object.defineProperty(globalThis, 'sessionStorage', {
+    value: mockSessionStorage,
+    configurable: true,
+    writable: true,
+  });
+
+  if (typeof window !== 'undefined') {
+    Object.defineProperty(window, 'localStorage', {
+      value: mockLocalStorage,
+      configurable: true,
+      writable: true,
+    });
+    Object.defineProperty(window, 'sessionStorage', {
+      value: mockSessionStorage,
+      configurable: true,
+      writable: true,
+    });
+  }
+} catch {
+  // ignore
+}

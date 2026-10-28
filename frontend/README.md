@@ -1,26 +1,33 @@
-# Frontend
+# BlindShield Arena console
 
-This is the BlindShield Arena visual prototype built with React, TypeScript, and Vite.
+React 18, TypeScript and Vite console for operator, red-team, blue-team and auditor workflows.
 
-## Start
-
-~~~powershell
+```sh
 npm ci
 npm run dev
-~~~
+```
+
+Open http://localhost:5173. **SIMULATED DATA** is the supported self-contained evaluation path. It uses browser/mock state and does not dispatch a real model.
 
 ## Checks
 
-~~~powershell
+```sh
 npm run verify
-npm run e2e:smoke
-~~~
+```
 
-The project requires Node.js compatible with the locked dependencies. Playwright browser setup may be needed for local E2E runs; the recorded Docker run is documented in the backend release runbook.
+This runs type checking, ESLint, Vitest and the production build. Browser suites use Playwright through `npm run e2e:smoke` and need compatible browser binaries. See [the evaluator guide](../EVALUATION.md) for executed results.
 
-## Scope
+The current delivery passed 284 Vitest tests, type checking, lint and build. Four
+smoke/accessibility cases and two judge-walkthrough cases passed across desktop
+and mobile viewports using Playwright with installed Microsoft Edge. This is not
+a rerun of the entire historical 96-case browser suite.
 
-This UI uses local mock and browser state. It is not connected to the backend, authenticated API, or real model. Its workflow, badges, and sample results are illustrative and must not be presented as verified backend behavior.
+## Live adapter status
 
-The files PROJECT_OVERVIEW_AND_FRONTEND_SPEC.md, FRONTEND_PAGE_FEATURES.md, and FRONTEND_BRIEF.md are design specifications for proposed features, not descriptions of the implemented interface. The npm lock-only audit recorded eight high and one moderate finding; see the root submission packet for the receipt.
+`src/lib/api/liveClient.ts` adds HTTP transport, lifecycle operations, idempotency keys, feedback polling and ZIP bundle download. The new integration suite mocks `fetch`; passing it does not prove interoperability with a running Python service.
 
+The backend authenticates the TLS client certificate. JavaScript role headers, fingerprints and browser role selection do not establish certificate identity. The Vite development proxy does not provision client certificates. Live mode needs an owner-provisioned authenticated transport and matching endpoint/response adapters. The development proxy is not a deployment gateway.
+
+Known integration gaps include experiment-list/status projections, endpoints the console expects but the prototype does not expose, and the legacy JSON evidence view versus the backend's raw ZIP evidence endpoint. The explicit ZIP download method is separate. Backend authorization stays authoritative.
+
+The console labels simulated telemetry. The earlier 96-case Playwright receipt predates this frontend delivery and remains historical.

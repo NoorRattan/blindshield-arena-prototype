@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ShieldCheck, Info } from 'lucide-react';
 import { PageHeader } from '../../components/PageHeader';
 import { ResidualRiskPanel } from '../../components/ResidualRiskPanel';
-import { MockArenaServer } from '../../lib/mock/server';
+import { SimulatedDataTag } from '../../components/SimulatedDataTag';
+import { arenaClient } from '../../lib/api/client';
+import { useArenaStore } from '../../state/useArenaStore';
 import { DEMO_KEYS } from '../../lib/crypto';
 import type { ArenaEvent, Digest, Epoch } from '../../lib/schemas';
 import { appendEventToLedger, createSignedCheckpoint, verifyEventChain } from '../../lib/mock/ledger';
@@ -16,17 +18,18 @@ import { TamperPlaygroundPanel } from './TamperPlaygroundPanel';
 import type { EvidenceBundle, TamperType, VerificationTrustAnchors } from './types';
 
 export const EvidencePage: React.FC = () => {
-  const server = useMemo(() => new MockArenaServer(), []);
+  const connectionMode = useArenaStore((state) => state.connectionMode);
+  const isLive = connectionMode === 'live';
 
   // State
   const [bundle, setBundle] = useState<EvidenceBundle | null>(null);
   const [untamperedBundle, setUntamperedBundle] = useState<EvidenceBundle | null>(null);
   const [anchors, setAnchors] = useState<VerificationTrustAnchors>({
-    publicKeyHex: DEMO_KEYS.PUBLIC_KEY_HEX,
-    isPinned: true,
-    expectedDomain: 'BAYORA-EVAL-04',
-    expectedExperimentId: 'exp_released_04',
-    expectedEpoch: 5 as Epoch,
+    publicKeyHex: isLive ? '' : DEMO_KEYS.PUBLIC_KEY_HEX,
+    isPinned: !isLive,
+    expectedDomain: isLive ? '' : 'BAYORA-EVAL-04',
+    expectedExperimentId: isLive ? '' : 'exp_released_04',
+    expectedEpoch: (isLive ? 1 : 5) as Epoch,
     expectedManifestDigest: 'sha256:0000000000000000000000000000000000000000000000000000000000000000' as Digest,
     witnessedTerminalCheckpointReceipt: '',
   });
@@ -44,9 +47,9 @@ export const EvidencePage: React.FC = () => {
   const { verify, isVerifying, report } = useEvidenceVerifier();
 
   // Load Released Epoch 04 Mock Bundle on mount
-  const loadReleasedMockBundle = useCallback(() => {
+  const loadReleasedMockBundle = useCallback(async () => {
     try {
-      const raw = server.getEvidenceBundle('exp_released_04', 'auditor');
+      const raw = await arenaClient.getEvidenceBundle('exp_released_04', 'auditor');
       const loaded: EvidenceBundle = {
         metadata: raw.metadata,
         ledger: raw.ledger as ArenaEvent[],
@@ -72,9 +75,9 @@ export const EvidencePage: React.FC = () => {
       // Trigger verification
       verify(loaded, initialAnchors);
     } catch (err) {
-      console.error('Failed to load released mock bundle:', err);
+      console.error('Failed to load released evidence bundle:', err);
     }
-  }, [server, verify]);
+  }, [verify]);
 
   // Load large 1,500 event bundle for 60fps performance validation
   const loadLargeBundlePreset = useCallback(() => {
@@ -136,8 +139,10 @@ export const EvidencePage: React.FC = () => {
   }, [untamperedBundle, anchors, verify]);
 
   useEffect(() => {
-    loadReleasedMockBundle();
-  }, [loadReleasedMockBundle]);
+    if (connectionMode !== 'live') {
+      loadReleasedMockBundle();
+    }
+  }, [loadReleasedMockBundle, connectionMode]);
 
   // Handle Tamper Mutation
   const handleApplyTamper = (type: TamperType) => {
@@ -189,7 +194,7 @@ export const EvidencePage: React.FC = () => {
 
     // Auto-populate anchors with pinned mode active
     const newAnchors: VerificationTrustAnchors = {
-      publicKeyHex: anchors.publicKeyHex || DEMO_KEYS.PUBLIC_KEY_HEX,
+      publicKeyHex: isLive ? (anchors.publicKeyHex || '') : (anchors.publicKeyHex || DEMO_KEYS.PUBLIC_KEY_HEX),
       isPinned: anchors.isPinned,
       expectedDomain: newBundle.metadata.domain,
       expectedExperimentId: newBundle.metadata.experiment_id,
@@ -209,7 +214,30 @@ export const EvidencePage: React.FC = () => {
         title="EVIDENCE INSPECTOR & OFFLINE VERIFIER"
         epoch={anchors.expectedEpoch}
         timestamp="OFFLINE WORKER"
+        status={
+          <div className="flex items-center gap-2">
+            {connectionMode === 'simulated' ? (
+              <SimulatedDataTag />
+            ) : (
+              <span className="font-mono text-[10px] text-ok border border-ok/30 px-1.5 py-0.5">LIVE</span>
+            )}
+            <span>CRYPTOGRAPHICALLY PINNED</span>
+          </div>
+        }
       />
+
+      {connectionMode === 'simulated' && (
+        <SimulatedDataTag
+          variant="banner"
+          message="SIMULATED EVIDENCE BUNDLE · Inspecting local mock ledger (exp_released_04) with demo keys"
+        />
+      )}
+
+      {connectionMode === 'live' && (
+        <div className="p-3 bg-am/10 border border-am/40 rounded-[2px] font-mono text-xs text-am flex items-center justify-between">
+          <span><strong>LIVE TRUST PINNING REQUIRED:</strong> To verify live backend evidence, enter your external witness public key (64 hex characters) in the Trust Anchors panel. The built-in demo key is untrusted in live mode per Invariant 6.</span>
+        </div>
+      )}
 
       {/* Assurance Disclaimer / Banner */}
       <div className="p-3 bg-s2 border border-bd rounded-[2px] text-xs font-mono flex items-center justify-between text-mut">

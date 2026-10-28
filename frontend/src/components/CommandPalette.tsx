@@ -8,7 +8,7 @@ import { cn } from '../lib/cn';
 
 interface CommandItem {
   id: string;
-  category: 'Navigation' | 'Role';
+  category: 'Navigation' | 'Role' | 'Mode';
   title: string;
   shortcut?: string;
   action: () => void;
@@ -21,7 +21,7 @@ export const CommandPalette: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const { setRole } = useArenaStore();
+  const { setRole, setConnectionMode } = useArenaStore();
 
   useEffect(() => {
     if (isOpen) {
@@ -133,6 +133,21 @@ export const CommandPalette: React.FC = () => {
       category: 'Role',
       title: 'Switch Role to Auditor',
       action: () => setRole('auditor' as UserRole),
+      icon: UserCheck,
+    },
+    // Modes
+    {
+      id: 'mode-simulated',
+      category: 'Mode',
+      title: 'Switch to Simulated Mode (In-Memory Demo)',
+      action: () => setConnectionMode('simulated'),
+      icon: UserCheck,
+    },
+    {
+      id: 'mode-live',
+      category: 'Mode',
+      title: 'Switch to Live Backend Mode (Fail-Closed)',
+      action: () => setConnectionMode('live'),
       icon: UserCheck,
     },
   ];

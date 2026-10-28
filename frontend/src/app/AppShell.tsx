@@ -31,7 +31,7 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 export const AppShell: React.FC = () => {
-  const { domain, epoch, witnessStatus } = useArenaStore();
+  const { domain, epoch, witnessStatus, connectionMode, setConnectionMode } = useArenaStore();
   const location = useLocation();
 
   return (
@@ -76,8 +76,36 @@ export const AppShell: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Controls: Role Switcher, Command Palette Trigger */}
+          {/* Right Controls: Connection Mode, Role Switcher, Command Palette Trigger */}
           <div className="flex items-center gap-2.5">
+            {/* Mode Indicator & Switcher */}
+            <button
+              type="button"
+              data-testid="connection-mode-toggle"
+              onClick={() =>
+                setConnectionMode(connectionMode === 'simulated' ? 'live' : 'simulated')
+              }
+              title={`Operating Mode: ${
+                connectionMode === 'simulated'
+                  ? 'SIMULATED DATA (In-Memory Sandbox). Click to switch to Live Backend.'
+                  : 'LIVE BACKEND (Fail-Closed mTLS Connection). Click to switch to Simulated Mode.'
+              }`}
+              className={cn(
+                'px-2 py-0.5 rounded-[2px] font-mono text-[10px] font-bold tracking-wider flex items-center gap-1.5 border transition-colors select-none',
+                connectionMode === 'simulated'
+                  ? 'bg-am/15 text-am border-am/40 hover:bg-am/25'
+                  : 'bg-ok/15 text-ok border-ok/40 hover:bg-ok/25'
+              )}
+            >
+              <span
+                className={cn(
+                  'w-1.5 h-1.5 rounded-full',
+                  connectionMode === 'simulated' ? 'bg-am' : 'bg-ok animate-pulse'
+                )}
+              />
+              <span>{connectionMode === 'simulated' ? 'SIMULATED DATA' : 'LIVE BACKEND'}</span>
+            </button>
+
             <RoleSwitcher />
 
             {/* Command Palette Trigger */}

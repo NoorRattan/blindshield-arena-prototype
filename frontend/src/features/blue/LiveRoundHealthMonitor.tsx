@@ -21,7 +21,7 @@ export const LiveRoundHealthMonitor: React.FC<LiveRoundHealthMonitorProps> = ({
   return (
     <Panel
       label="02 — LIVE ROUND HEALTH MONITOR"
-      meta="SANITIZED TELEMETRY STREAM"
+      meta={isActiveRound ? "STATIC EMBARGOED PROJECTION (EmbargoedView)" : "SANITIZED TELEMETRY STREAM"}
       className="p-5"
     >
       <div className="space-y-5">
@@ -31,11 +31,18 @@ export const LiveRoundHealthMonitor: React.FC<LiveRoundHealthMonitorProps> = ({
           aria-label="Security Isolation Notice"
           className="border border-bd bg-s2 p-4 text-xs font-mono space-y-2"
         >
-          <div className="flex items-center gap-2 text-bl font-semibold">
-            <ShieldAlert className="h-4 w-4 shrink-0" />
-            <span className="uppercase tracking-wider">
-              SECURITY POLICY // SPEC CORRECTION C-02 & FE-D-003
-            </span>
+          <div className="flex items-center justify-between gap-2 text-bl font-semibold">
+            <div className="flex items-center gap-2">
+              <ShieldAlert className="h-4 w-4 shrink-0" />
+              <span className="uppercase tracking-wider">
+                SECURITY POLICY // SPEC CORRECTION C-02 &amp; FE-D-003
+              </span>
+            </div>
+            {isActiveRound && (
+              <span className="border border-emb/40 bg-emb/10 px-2 py-0.5 text-emb font-mono text-[10px] uppercase">
+                STATUS: EMBARGOED
+              </span>
+            )}
           </div>
           <p className="text-tx text-[11px] leading-relaxed">
             In-flight attack payloads, defense classification decisions (Allow/Block), confidence scores, and rule match identifiers are strictly withheld from blue defenders during active evaluation rounds. Latency is delayed by ~30s and bucketed to coarse ~50ms windows to bound side-channel leakage.

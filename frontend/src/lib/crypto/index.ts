@@ -21,6 +21,18 @@ export const DOMAIN_PREFIXES = {
 } as const;
 
 /**
+ * Backend canonical arena.v2 NUL-delimited binary domain prefixes (contracts/crypto.py).
+ * Exact binary vectors defined in backend/fixtures/arena-v2/vectors.json.
+ */
+export const ARENA_V2_PREFIXES = {
+  EVENT: utf8ToBytes('arena.v2/event\x00'),
+  CHECKPOINT: utf8ToBytes('arena.v2/checkpoint\x00'),
+  WITNESS: utf8ToBytes('arena.v2/witness\x00'),
+  TURN: utf8ToBytes('arena.v2/turn\x00'),
+  COMMITMENT: utf8ToBytes('arena.v2/commitment\x00'),
+} as const;
+
+/**
  * Invariant 6 & P03 Scope: DEMO KEY strictly flagged as NOT FOR PRODUCTION.
  * Used only for mock demonstrator verification in test/browser environment.
  */
@@ -176,4 +188,104 @@ export function getPublicKeyHex(privateKeyHex: string): string {
   const privKey = hexToBytes(privateKeyHex);
   const pubKey = ed.getPublicKey(privKey);
   return bytesToHex(pubKey);
+}
+
+/**
+ * Encodes an integer/BigInt as an 8-byte big-endian Uint8Array.
+ * Matches Python int.to_bytes(8, "big").
+ */
+export function bigIntTo8BytesBE(n: number | bigint): Uint8Array {
+  const buf = new Uint8Array(8);
+  const view = new DataView(buf.buffer);
+  view.setBigUint64(0, BigInt(n), false);
+  return buf;
+}
+
+/**
+ * Canonical arena.v2 Checkpoint message bytes (NUL-delimited).
+ * message = b"arena.v2/checkpoint\x00" + canonical_bytes(checkpoint)
+ */
+export function canonicalCheckpointMessage(checkpoint: unknown): Uint8Array {
+  const canonical = canonicalJson(checkpoint);
+  return ed.etc.concatBytes(ARENA_V2_PREFIXES.CHECKPOINT, utf8ToBytes(canonical));
+}
+
+/**
+ * Computes lowercase 64-char SHA-256 hex digest of canonical Checkpoint message
+ */
+export function canonicalCheckpointDigest(checkpoint: unknown): string {
+  return bytesToHex(sha256(canonicalCheckpointMessage(checkpoint)));
+}
+
+/**
+ * Computes canonical arena.v2 event digest.
+ * sha256(b"arena.v2/event\x00" + bytes.fromhex(event.previous_digest) + canonical_bytes(event))
+ */
+export function canonicalEventDigest(event: { previous_digest: string; [key: string]: unknown }): string {
+  const prevHex = event.previous_digest.replace(/^sha256:/, '');
+  const prevBytes = hexToBytes(prevHex);
+  const canonical = canonicalJson(event);
+  const message = ed.etc.concatBytes(
+    ARENA_V2_PREFIXES.EVENT,
+    prevBytes,
+    utf8ToBytes(canonical)
+  );
+  return bytesToHex(sha256(message));
+}
+
+/**
+ * Computes canonical arena.v2 commitment digest.
+ * sha256(b"arena.v2/commitment\x00" + nonce (32 bytes) + len(content).to_bytes(8, "big") + content)
+ */
+export function canonicalCommitment(
+  content: Uint8Array | string,
+  nonceHexOrBytes: string | Uint8Array
+): string {
+  const contentBytes = typeof content === 'string' ? utf8ToBytes(content) : content;
+  const nonceBytes = typeof nonceHexOrBytes === 'string' ? hexToBytes(nonceHexOrBytes) : nonceHexOrBytes;
+  if (nonceBytes.length !== 32) {
+    throw new Error(`Commitment nonce must be exactly 32 bytes (got ${nonceBytes.length})`);
+  }
+  const lenBytes = bigIntTo8BytesBE(contentBytes.length);
+  const message = ed.etc.concatBytes(
+    ARENA_V2_PREFIXES.COMMITMENT,
+    nonceBytes,
+    lenBytes,
+    contentBytes
+  );
+  return bytesToHex(sha256(message));
+}
+
+/**
+ * Canonical arena.v2 Witness message bytes (NUL-delimited).
+ * message = b"arena.v2/witness\x00" + canonical_bytes(receipt)
+ */
+export function canonicalWitnessMessage(receipt: unknown): Uint8Array {
+  const canonical = canonicalJson(receipt);
+  return ed.etc.concatBytes(ARENA_V2_PREFIXES.WITNESS, utf8ToBytes(canonical));
+}
+
+/**
+ * Canonical arena.v2 Turn message bytes (NUL-delimited).
+ * message = b"arena.v2/turn\x00" + canonical_bytes(receipt)
+ */
+export function canonicalTurnMessage(receipt: unknown): Uint8Array {
+  const canonical = canonicalJson(receipt);
+  return ed.etc.concatBytes(ARENA_V2_PREFIXES.TURN, utf8ToBytes(canonical));
+}
+
+/**
+ * Verifies checkpoint signature against pinned public key using canonical arena.v2 wire format.
+ */
+export function verifyCanonicalCheckpoint(
+  checkpoint: unknown,
+  signatureHex: string,
+  publicKeyHexOrBytes: string | Uint8Array
+): boolean {
+  try {
+    const msgBytes = canonicalCheckpointMessage(checkpoint);
+    return verifyEd25519(signatureHex, msgBytes, publicKeyHexOrBytes);
+  } catch {
+    return false;
+  }
 }

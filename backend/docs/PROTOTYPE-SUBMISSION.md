@@ -1,6 +1,6 @@
 # Prototype submission packet
 
-**Snapshot date: 28 October 2026.** This packet records the local prototype and the evidence included in this source snapshot. The repository, social posts, and event form have not been published/submitted by this task. No event extension beyond the latest publicly listed cutoff has been verified.
+**Package date: 28 October 2026.** This packet accompanies the dedicated `NoorRattan/blindshield-arena-prototype` evaluation repository. Start with the root [evaluator guide](../../EVALUATION.md) for the current frontend delivery and checks. Historical receipts retain their original dates, source identities and blocker states. Event-form and social submission are separate owner actions.
 
 ## Reviewer entry points
 
@@ -16,7 +16,7 @@
 
 The prepared-host receipt records six real-model calibration calls, six authenticated demo calls, an independent offline verifier exit code of 0, and cleanup on the same Windows laptop with Docker Desktop. It is not independent-hardware evidence, full T/P acceptance, or a production guarantee.
 
-The frontend E2E receipt records 96 passed cases across desktop and mobile projects. The harness uses local mock/browser state; it does not connect to the backend or real model and does not change the Step 6 procedure count.
+The historical frontend E2E receipt records 96 passed cases across desktop and mobile projects before the new frontend delivery. It does not validate the new code. Current checks are recorded separately in the root evaluator guide. Frontend integration tests use a mocked transport and do not establish browser-to-backend mTLS interoperability.
 
 Three memory/registry-specific test modules are excluded from this public source snapshot because they require private project memory and registry fixtures. The documented public test command skips those modules; its result is not full acceptance.
 
@@ -26,7 +26,7 @@ The Step 6 summary evaluates 35 procedures: **19 PASS, 15 PARTIAL, and 1 INCONCL
 
 Path-redacted detailed Step 6 files are omitted from this snapshot because their modified bytes no longer validate their original hashes or signatures. The summary remains project-reported and cannot be independently verified from those omitted records. T-006 remains inconclusive. Fairness, model safety, physical-I/O enforcement, host-admin/full-snapshot rollback resistance, forensic erasure, independent-machine portability, and zero timing leakage remain unsupported claims.
 
-The immutable prepared-host receipt includes the blocker state recorded when that run was packaged. Subsequent owner decisions selected MIT for project-authored materials and authorized JBB use with citation; they do not establish permission from every code contributor or verify a later event extension. Do not edit historical receipts to rewrite their state.
+The immutable prepared-host receipt includes the blocker state recorded when that run was packaged. Later owner decisions selected MIT, authorized JBB use with citation and explicitly confirmed MIT publication permission from Mayank and Monu, including the new frontend. Private permission correspondence was not inspected. Historical receipts remain unchanged.
 
 ## Assets and external actions
 

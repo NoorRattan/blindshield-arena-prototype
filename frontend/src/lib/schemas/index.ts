@@ -35,6 +35,46 @@ export const DigestSchema = z
 export type Digest = z.infer<typeof DigestSchema>;
 
 /**
+ * Backend canonical wire format raw 64 hex characters (contracts/common.py: Digest)
+ */
+export const RawDigestSchema = z
+  .string()
+  .regex(/^[0-9a-f]{64}$/, 'Must be formatted as 64 lowercase hex characters');
+export type RawDigest = z.infer<typeof RawDigestSchema>;
+
+/**
+ * Flexible digest schema that accepts either raw 64 hex chars or sha256:<64 hex> prefix
+ */
+export const FlexibleDigestSchema = z
+  .string()
+  .regex(/^(?:sha256:)?[0-9a-f]{64}$/, 'Must be 64 hex chars with optional sha256: prefix');
+export type FlexibleDigest = z.infer<typeof FlexibleDigestSchema>;
+
+/**
+ * Backend canonical 128-char hex Ed25519 signature
+ */
+export const SignatureSchema = z
+  .string()
+  .regex(/^[0-9a-f]{128}$/, 'Must be 128 lowercase hex chars');
+export type Signature = z.infer<typeof SignatureSchema>;
+
+/**
+ * Canonical ASCII ClientKey matching backend regex ^[!-~]+$ (1 to 128 chars)
+ */
+export const ClientKeySchema = z
+  .string()
+  .regex(/^[!-~]{1,128}$/, 'ClientKey must be printable ASCII without spaces (1-128 chars)');
+export type ClientKey = z.infer<typeof ClientKeySchema>;
+
+/**
+ * Canonical UUID schema matching lowercase hyphenated UUID
+ */
+export const UuidSchema = z
+  .string()
+  .regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/, 'Must be canonical lowercase UUID');
+export type Uuid = z.infer<typeof UuidSchema>;
+
+/**
  * Lifecycle states from Bayora Research Playbook state machine
  */
 export const LifecycleStateSchema = z.enum([
@@ -299,6 +339,80 @@ export const CheckpointSchema = z
   })
   .strict();
 export type Checkpoint = z.infer<typeof CheckpointSchema>;
+
+/**
+ * Backend canonical ArtifactRef (contracts/evidence.py)
+ */
+export const ArtifactRefSchema = z
+  .object({
+    artifact_id: UuidSchema,
+    ciphertext_sha256: RawDigestSchema,
+  })
+  .strict();
+export type ArtifactRef = z.infer<typeof ArtifactRefSchema>;
+
+/**
+ * Backend canonical arena.v2 Event (contracts/evidence.py & vectors.json)
+ */
+export const ArenaV2EventSchema = z
+  .object({
+    domain_id: UuidSchema,
+    experiment_id: UuidSchema,
+    epoch: EpochSchema,
+    schema_version: z.literal('arena.v2'),
+    session_id: UuidSchema.nullable(),
+    turn_id: UuidSchema.nullable(),
+    turn_index: z.number().int().nonnegative().nullable(),
+    sequence: z.number().int().positive(),
+    previous_digest: RawDigestSchema,
+    actor_id: z.string().min(1),
+    event_type: z.string().min(1),
+    outcome_code: z.string().min(1),
+    artifact_ciphertext_refs: z.array(ArtifactRefSchema),
+    public_manifest_digest: RawDigestSchema,
+    utc_time: z.string().min(1),
+    duration_us: z.number().int().nonnegative(),
+  })
+  .strict();
+export type ArenaV2Event = z.infer<typeof ArenaV2EventSchema>;
+
+/**
+ * Backend canonical arena.v2 Checkpoint (contracts/evidence.py & vectors.json)
+ */
+export const ArenaV2CheckpointSchema = z
+  .object({
+    domain_id: UuidSchema,
+    experiment_id: UuidSchema,
+    epoch: EpochSchema,
+    schema_version: z.literal('arena.v2'),
+    public_manifest_digest: RawDigestSchema,
+    event_count: z.number().int().positive(),
+    final_root: RawDigestSchema,
+    terminal_marker: z.literal('CLOSED'),
+    required_artifacts: z.array(ArtifactRefSchema),
+    signer_key_id: z.string().min(1),
+  })
+  .strict();
+export type ArenaV2Checkpoint = z.infer<typeof ArenaV2CheckpointSchema>;
+
+/**
+ * Backend canonical arena.v2 WitnessClose (contracts/evidence.py)
+ */
+export const ArenaV2WitnessCloseSchema = z
+  .object({
+    domain_id: UuidSchema,
+    experiment_id: UuidSchema,
+    epoch: EpochSchema,
+    schema_version: z.literal('arena.v2'),
+    receipt_type: z.literal('CLOSE'),
+    public_manifest_digest: RawDigestSchema,
+    checkpoint_digest: RawDigestSchema,
+    event_count: z.number().int().positive(),
+    final_root: RawDigestSchema,
+    witness_key_id: z.string().min(1),
+  })
+  .strict();
+export type ArenaV2WitnessClose = z.infer<typeof ArenaV2WitnessCloseSchema>;
 
 /**
  * Arena runtime limits configuration

@@ -1,54 +1,68 @@
 # BlindShield Arena
 
-> Local public-release candidate with a new, independent Git history. Publication remains blocked pending contributor permission records. See [release readiness](RELEASE-READINESS.md). The original working repository and its Git history are not included.
+Prototype for the Bayora challenge: securing adversarial AI testing infrastructure.
 
-BlindShield Arena is a local prototype for evaluating AI model defenses with authenticated execution, isolated model lanes, tamper-evident records, and offline evidence verification.
+BlindShield Arena coordinates adversarial prompts, defensive processing and local model execution while keeping authorization, result release and evidence tied to the same run. It is a bounded local prototype with documented acceptance gaps.
 
-## Prototype scope
+## Start the frontend
 
-The backend supports bounded local interactive and sealed-batch runs using a pinned Qwen/llama.cpp profile. It is not a production service and does not have complete acceptance across all measured requirements.
+Use Node.js and npm:
 
-The frontend is a separate visual prototype. It uses local mock/browser state and is not connected to the backend or real model.
-
-## Recorded verification
-
-The included records report:
-
-- This independent snapshot passed fresh same-laptop native-Linux prepared-host acceptance at source commit `2f73df8`: six real-model calibration calls, six authenticated demo calls, three-lane processing overlap, independent offline verification (exit 0), and cleanup. Its supported Windows application test subset passed 548 tests and 14 subtests, with one documented skip. The [current validation summary](backend/evidence/public-snapshot-validation-20261028.json) also discloses the retained failed attempt and fixture exclusions.
-- Step 6 evaluated 35 procedures: 19 PASS, 15 PARTIAL, and 1 INCONCLUSIVE. Three suites each reported 633 passed and one documented unsupported coordinated-rollback skip. The Linux run used the same laptop and shared WSL kernel, so it is not independent-hardware validation.
-- The candidate-bound prepared-host receipt records six real-model calibration calls, six authenticated demo calls, independent offline verification, and cleanup.
-- The pinned Playwright Docker run reported 96 UI E2E cases passed across desktop and mobile. It exercises the mock frontend only and does not add backend acceptance procedures.
-
-The Step 6 report is a result summary. Its detailed path-redacted records are omitted because their modified bytes no longer validate the original hashes/signatures. Treat those results as project-reported evidence; this snapshot does not provide independent verification of those omitted records.
-
-Three memory/registry-specific test modules are omitted because they depend on private project memory and registry fixtures not distributed here. This is a source and reviewer snapshot, not the complete private working tree.
-
-See [Step 6 acceptance](backend/docs/STEP6-ACCEPTANCE.md), the [prepared-host receipt](backend/evidence/step7-prepared-host-acceptance-20261028-r2.json), the [frontend E2E receipt](backend/evidence/frontend-e2e-docker-20261028.json), and the [submission packet](backend/docs/PROTOTYPE-SUBMISSION.md).
-
-## Run the frontend
-
-From frontend/:
-
-~~~powershell
+```sh
+cd frontend
 npm ci
 npm run dev
-~~~
+```
 
-The UI suites can be run with npm run verify or npm run e2e:smoke. The current lock-only audit recorded eight high and one moderate finding; see the audit receipt linked from the submission packet.
+Open **http://localhost:5173**. Start in **SIMULATED DATA** mode to explore operator, red-team, blue-team and auditor workflows. Simulation does not dispatch a real model or prove backend security controls.
 
-## Run the backend
+The new frontend includes a live HTTP adapter, lifecycle methods and evidence ZIP download support. Its integration tests use a mocked transport. Browser-to-backend mTLS integration remains unverified. Browser role headers do not authenticate a user to the backend.
 
-A backend demo needs a compatible host, Docker images, the pinned model weights, prepared corpus and receipt, and owner-managed signing/recovery authorities. These files and credentials are intentionally not included.
+## What evaluators can review
 
-The backend derives source identity from Git. This candidate has its own Git repository. The included historical signed profiles and grants are tied to the earlier measured candidate; use fresh profiles and signatures bound to this candidate's committed source. See [release readiness](RELEASE-READINESS.md) for the current admission result.
+| Area | Implementation and evidence |
+| --- | --- |
+| Backend | Python broker, authenticated lifecycle, query budgets, encrypted artifacts and three isolated Qwen/llama.cpp lanes |
+| Evidence | Recorder/witness records and a separately installed offline verifier |
+| Fresh prepared-host run | Six calibration calls plus six authenticated demo calls, three-lane overlap, offline verification exit 0 and cleanup |
+| Public backend test subset | 548 tests and 14 subtests passed, with one documented skip, at source `2f73df8` |
+| Broader Step 6 evaluation | 35 procedures: 19 PASS, 15 PARTIAL and 1 INCONCLUSIVE |
+| Frontend | React/TypeScript console, explicit simulation labels and new live adapter; current checks are in the evaluator guide |
 
-Start with the [backend guide](backend/README.md), [release runbook](backend/docs/PROTOTYPE-RELEASE.md), and [service lifecycle guide](backend/docs/PROTOTYPE-SERVICE.md). Never add model weights, prepared corpus data, private keys, local stores, or raw run artifacts to Git.
+The prepared-host result used the same laptop and native Linux/WSL environment, not independent hardware. Failed attempts remain disclosed in the validation summary. Test counts are not defense accuracy or complete acceptance.
 
-## Distribution and limitations
+```mermaid
+flowchart LR
+    C[Authenticated clients] --> B[Trusted broker]
+    B --> D[Transient defense processing]
+    D --> L[Three isolated model lanes]
+    B --> R[Recorder and witness]
+    R --> V[Offline evidence verifier]
+```
 
-The project license selected for project-authored material is MIT; see [LICENSE](LICENSE) and [third-party notices](THIRD-PARTY-NOTICES.md). Confirm that all contributors authorized distribution of their contributions before publishing. The preserved working repository includes code contributed by collaborators, and this snapshot does not contain a written relicensing record for every contributor.
+## Evaluation packet
 
-The JBB-Behaviors dataset is used as an evaluation source and cited under its upstream MIT terms. Dataset records, prepared corpus, source data and opening keys are not included. The root license does not cover third-party model weights, datasets, container images or dependencies.
+- [Evaluator guide and current checks](EVALUATION.md)
+- [Backend setup and test subset](backend/README.md)
+- [Real-model preparation and release runbook](backend/docs/PROTOTYPE-RELEASE.md)
+- [Authenticated service lifecycle](backend/docs/PROTOTYPE-SERVICE.md)
+- [Fresh snapshot validation summary](backend/evidence/public-snapshot-validation-20261028.json)
+- [Step 6 outcomes and limitations](backend/docs/STEP6-ACCEPTANCE.md)
+- [Final presentation](submission/BlindShield_Arena_Final_Submission.pptx)
+- [Third-party notices](THIRD-PARTY-NOTICES.md)
 
-Do not claim production readiness, 100% acceptance, universal defense accuracy, fairness, independent-machine portability, host-admin rollback resistance, forensic erasure, or zero side-channel leakage. Known limits and unsupported claims remain in the acceptance report.
+## Running the real backend
 
+A real run needs Docker, pinned model/images, an admitted prepared corpus, owner-managed authorities and fresh host/source admission. These private and large assets are absent from Git. Follow the backend runbook after provisioning them. A fresh clone is not a ready-to-run model deployment.
+
+The API binds to loopback and requires mutual TLS. Historical public certificates and grants do not provision another host. Never disable backend authentication or commit private keys to make a demo connect.
+
+## Current limits
+
+Live browser integration, independent-hardware validation, isolated cache timing, general resource fairness and physical-I/O enforcement remain open. This prototype does not establish production readiness, universal model safety, host-admin rollback resistance or zero side-channel leakage.
+
+This repo starts from reviewed sanitized history. The original working repository and its machine-specific history are separate. Model weights, corpus records, private keys, raw databases and run archives stay outside Git.
+
+## License
+
+Project code uses [MIT](LICENSE). The owner confirmed MIT publication permission from Mayank Joshi and Monu Kumar, including the new frontend. See [contributor permissions](CONTRIBUTOR-RIGHTS.md). Third-party material retains its own terms.

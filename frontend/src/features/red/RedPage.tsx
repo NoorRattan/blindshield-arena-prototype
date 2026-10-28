@@ -4,6 +4,7 @@ import { KeyRound, Cpu, Layers } from 'lucide-react';
 import { PageHeader } from '../../components/PageHeader';
 import { StatusPill } from '../../components/StatusPill';
 import { ErrorState } from '../../components/ErrorState';
+import { SimulatedDataTag } from '../../components/SimulatedDataTag';
 import { useArenaStore } from '../../state/useArenaStore';
 import { arenaClient } from '../../lib/api/client';
 import { PayloadWorkshop } from './PayloadWorkshop';
@@ -13,6 +14,8 @@ import type { AttackReceipt, Epoch } from '../../lib/schemas';
 export const RedPage: React.FC = () => {
   const queryClient = useQueryClient();
   const currentRole = useArenaStore((state) => state.role);
+  const connectionMode = useArenaStore((state) => state.connectionMode);
+  const authenticatedPrincipal = useArenaStore((state) => state.authenticatedPrincipal);
 
   // Selected arena ID (default to running arena exp_running_01)
   const [selectedExperimentId, setSelectedExperimentId] = useState<string>('exp_running_01');
@@ -106,18 +109,31 @@ export const RedPage: React.FC = () => {
   }
 
   const identityLabel =
-    currentRole === 'operator'
-      ? 'operator-root-01 · mTLS verified (DEMO MODE)'
-      : 'red-agent-01 · mTLS verified';
+    connectionMode === 'live'
+      ? authenticatedPrincipal?.is_mtls_verified
+        ? `${authenticatedPrincipal.subject_id} · mTLS verified (${authenticatedPrincipal.role.toUpperCase()})`
+        : 'UNAUTHENTICATED · NO mTLS CLIENT CERTIFICATE'
+      : currentRole === 'operator'
+        ? 'operator-root-01 · mTLS verified (DEMO MODE) · SIMULATED DATA'
+        : 'red-agent-01 · mTLS verified (SIMULATED DATA)';
 
   return (
     <div className="space-y-6">
+      {/* Prominent Simulated Data Notice when operating in simulation mode */}
+      {connectionMode === 'simulated' && (
+        <SimulatedDataTag
+          variant="banner"
+          message="SIMULATED DATA: Offensive payload workshop and feedback logs running in-memory demo mode. No live model or backend connected."
+        />
+      )}
+
       {/* Page Header */}
       <PageHeader
         docId="DOC-RED-05"
         title="RED TEAM OPERATIONAL PORTAL"
         description="ADVERSARIAL ATTACK SUBMISSION QUEUE // COMMITMENT WORKSHOP"
         epoch={status.epoch}
+        actions={<SimulatedDataTag />}
       />
 
       {/* Top Identity & Arena Bar */}

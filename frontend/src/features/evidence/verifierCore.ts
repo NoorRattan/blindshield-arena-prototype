@@ -4,6 +4,7 @@ import {
   computeChainDigest,
   verifyEd25519,
   DOMAIN_PREFIXES,
+  canonicalCheckpointMessage,
 } from '../../lib/crypto';
 import type { Digest } from '../../lib/schemas';
 import {
@@ -175,19 +176,31 @@ export function verifyEvidenceBundle(
     try {
       const { signature, ...unsignedPayload } = checkpoint;
       const canonical = canonicalJson(unsignedPayload);
-      const isSigValid = verifyEd25519(
+      // Verify canonical arena.v2 NUL-delimited wire format (b"arena.v2/checkpoint\0" + canonical)
+      const canonicalMsg = canonicalCheckpointMessage(unsignedPayload);
+      const isCanonicalSigValid = verifyEd25519(
         signature,
-        `${DOMAIN_PREFIXES.CHECKPOINT}${canonical}`,
+        canonicalMsg,
         trustAnchors.publicKeyHex
       );
+      // Fallback to legacy demo prefix for in-memory mock fixtures
+      const isLegacySigValid =
+        !isCanonicalSigValid &&
+        verifyEd25519(
+          signature,
+          `${DOMAIN_PREFIXES.CHECKPOINT}${canonical}`,
+          trustAnchors.publicKeyHex
+        );
+      const isSigValid = isCanonicalSigValid || isLegacySigValid;
 
       if (isSigValid) {
+        const formatLabel = isCanonicalSigValid ? 'canonical arena.v2 wire' : 'demo mock';
         rows.push({
           id: 'SIGNATURE',
           name: 'Witness Ed25519 Signature (Pinned Anchor)',
           status: 'PASS',
           code: 'SIG_VALID',
-          detail: `Ed25519 signature verified against pinned anchor ${trustAnchors.publicKeyHex.slice(0, 16)}...`,
+          detail: `Ed25519 signature verified (${formatLabel}) against pinned anchor ${trustAnchors.publicKeyHex.slice(0, 16)}...`,
         });
       } else {
         rows.push({

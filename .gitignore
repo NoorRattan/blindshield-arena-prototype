@@ -79,3 +79,6 @@ frontend/prompts/
 !/backend/docs/
 !/backend/docs/**
 frontend/prompts
+
+# Private preparation logs
+.local-evaluation/

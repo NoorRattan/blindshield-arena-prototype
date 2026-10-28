@@ -1,6 +1,20 @@
 import { create } from 'zustand';
 
 export type UserRole = 'operator' | 'red' | 'blue' | 'auditor';
+export type ConnectionMode = 'simulated' | 'live';
+export type LiveBackendStatus = 'CONNECTED' | 'DISCONNECTED' | 'FAIL_CLOSED';
+
+export interface AuthenticatedPrincipal {
+  subject_id: string;
+  role: UserRole;
+  domain_id: string;
+  expires_at: string;
+  is_mtls_verified: boolean;
+  certFingerprint?: string;
+  cert_fingerprint?: string;
+  subject?: string;
+}
+
 export type FailureMode =
   | 'none'
   | 'defense_timeout'
@@ -17,37 +31,105 @@ export interface ArenaState {
   witnessStatus: 'SYNCED' | 'PENDING' | 'INVALID';
   failureMode: FailureMode;
   theme: 'dark' | 'light';
+  connectionMode: ConnectionMode;
+  liveBackendStatus: LiveBackendStatus;
+  authenticatedPrincipal: AuthenticatedPrincipal | null;
   setRole: (role: UserRole) => void;
+  setConnectionMode: (mode: ConnectionMode) => void;
+  setLiveBackendStatus: (status: LiveBackendStatus) => void;
+  setAuthenticatedPrincipal: (principal: AuthenticatedPrincipal | null) => void;
   setTheme: (theme: 'dark' | 'light') => void;
   toggleTheme: () => void;
   setEpoch: (epoch: number) => void;
   setFailureMode: (mode: FailureMode) => void;
 }
 
-const getInitialRole = (): UserRole => {
-  if (typeof window !== 'undefined') {
-    const stored = localStorage.getItem('blindshield_role') as UserRole;
-    if (stored === 'operator' || stored === 'red' || stored === 'blue' || stored === 'auditor') {
-      return stored;
+const safeGetStorage = (key: string): string | null => {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage && typeof window.localStorage.getItem === 'function') {
+      return window.localStorage.getItem(key);
     }
+  } catch {
+    // Ignore storage unavailability in environments such as Node 22 without storage files
+  }
+  return null;
+};
+
+const safeSetStorage = (key: string, value: string): void => {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage && typeof window.localStorage.setItem === 'function') {
+      window.localStorage.setItem(key, value);
+    }
+  } catch {
+    // Ignore storage unavailability
+  }
+};
+
+const getInitialRole = (): UserRole => {
+  const stored = safeGetStorage('blindshield_role') as UserRole;
+  if (stored === 'operator' || stored === 'red' || stored === 'blue' || stored === 'auditor') {
+    return stored;
   }
   return 'operator';
 };
 
-export const useArenaStore = create<ArenaState>((set) => ({
+const getInitialConnectionMode = (): ConnectionMode => {
+  const stored = safeGetStorage('blindshield_connection_mode') as ConnectionMode;
+  if (stored === 'simulated' || stored === 'live') {
+    return stored;
+  }
+  return 'simulated';
+};
+
+export const useArenaStore = create<ArenaState>((set, get) => ({
   role: getInitialRole(),
   domain: 'BAYORA-PROD-01',
   epoch: 4,
   witnessStatus: 'SYNCED',
   failureMode: 'none',
   theme: 'dark',
+  connectionMode: getInitialConnectionMode(),
+  liveBackendStatus: 'DISCONNECTED',
+  authenticatedPrincipal: null,
   setRole: (role) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('blindshield_role', role);
+    const state = get();
+    // In live mode with authenticated certificate, role is strictly bound to mTLS
+    if (state.connectionMode === 'live' && state.authenticatedPrincipal?.is_mtls_verified) {
+      if (role !== state.authenticatedPrincipal.role) {
+        throw new Error(`Cannot switch role in live mode: bound to mTLS client certificate (${state.authenticatedPrincipal.role})`);
+      }
     }
+    safeSetStorage('blindshield_role', role);
     set({ role });
   },
-  setFailureMode: (failureMode) => set({ failureMode }),
+  setConnectionMode: (connectionMode) => {
+    safeSetStorage('blindshield_connection_mode', connectionMode);
+    if (connectionMode === 'live') {
+      // In live mode, default status is FAIL_CLOSED until a verified live backend response is received
+      set({ connectionMode, liveBackendStatus: 'FAIL_CLOSED' });
+    } else {
+      set({ connectionMode, liveBackendStatus: 'DISCONNECTED' });
+    }
+  },
+  setLiveBackendStatus: (liveBackendStatus) => set({ liveBackendStatus }),
+  setAuthenticatedPrincipal: (authenticatedPrincipal) => {
+    if (authenticatedPrincipal) {
+      set({
+        authenticatedPrincipal,
+        role: authenticatedPrincipal.role,
+        domain: authenticatedPrincipal.domain_id || 'BAYORA-PROD-01',
+      });
+    } else {
+      set({ authenticatedPrincipal });
+    }
+  },
+  setFailureMode: (failureMode) => {
+    const state = get();
+    if (state.connectionMode === 'live' && failureMode !== 'none') {
+      throw new Error('Failure injection is prohibited in live mode (fail-closed backend boundary)');
+    }
+    set({ failureMode });
+  },
   setTheme: () => {
     document.documentElement.setAttribute('data-theme', 'dark');
     set({ theme: 'dark' });

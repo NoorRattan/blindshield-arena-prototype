@@ -3,6 +3,7 @@ import { AlertCircle, RefreshCw, KeyRound, Lock } from 'lucide-react';
 import { PageHeader } from '../../components/PageHeader';
 import { ErrorState } from '../../components/ErrorState';
 import { ResidualRiskPanel } from '../../components/ResidualRiskPanel';
+import { SimulatedDataTag } from '../../components/SimulatedDataTag';
 import { useArenaStore } from '../../state/useArenaStore';
 import { arenaClient } from '../../lib/api/client';
 import { EpochSchema, DigestSchema } from '../../lib/schemas';
@@ -42,6 +43,7 @@ const INITIAL_FORM_DATA: SetupFormData = {
 export const SetupPage: React.FC = () => {
   const role = useArenaStore((state) => state.role);
   const activeEpoch = useArenaStore((state) => state.epoch);
+  const connectionMode = useArenaStore((state) => state.connectionMode);
 
   const [formData, setFormData] = useState<SetupFormData>(INITIAL_FORM_DATA);
   const [errors, setErrors] = useState<SetupFieldErrors>({});
@@ -305,9 +307,25 @@ export const SetupPage: React.FC = () => {
         docId="DOC-EXP-SETUP"
         title="EXPERIMENT SETUP & CANONICAL MANIFEST COMPOSER"
         epoch={typeof formData.epoch === 'number' ? formData.epoch : activeEpoch}
-        status="OPERATOR READY"
+        status={
+          <div className="flex items-center gap-2">
+            {connectionMode === 'simulated' ? (
+              <SimulatedDataTag />
+            ) : (
+              <span className="font-mono text-[10px] text-ok border border-ok/30 px-1.5 py-0.5">LIVE</span>
+            )}
+            <span>OPERATOR READY</span>
+          </div>
+        }
         breadcrumb="BAYORA // SETUP // MANIFEST"
       />
+
+      {connectionMode === 'simulated' && (
+        <SimulatedDataTag
+          variant="banner"
+          message="SIMULATED CONFIGURATION ENVIRONMENT · Operating in local mock mode without live broker commitment"
+        />
+      )}
 
       {/* Main 12-Column Grid: Wizard Left (cols 1-6), Manifest Preview Right (cols 7-12) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">

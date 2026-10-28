@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { BarChart2 } from 'lucide-react';
 import { PageHeader } from '../../components/PageHeader';
 import { IllustrativeTag } from '../../components/IllustrativeTag';
+import { SimulatedDataTag } from '../../components/SimulatedDataTag';
 import { ResidualRiskPanel } from '../../components/ResidualRiskPanel';
 import { generateIllustrativeBenchmarks } from './benchmarkFixtures';
 import { BenchmarkImportDropzone } from './BenchmarkImportDropzone';
@@ -42,13 +43,16 @@ export const BenchmarksPage: React.FC = () => {
         description="Attack success rates, latency per path, cache distinguishability (ROC AUC), and covert-channel capacity bound. All numbers are ILLUSTRATIVE until a validated dataset is imported."
         timestamp={now}
         status={
-          dataset?.illustrative ? (
-            <IllustrativeTag tooltip="No measured data imported — all values are ILLUSTRATIVE" />
-          ) : (
-            <span className="font-mono text-xs text-bl border border-bl/40 px-2 py-0.5 rounded">
-              MEASURED DATA
-            </span>
-          )
+          <div className="flex items-center gap-2">
+            <SimulatedDataTag />
+            {dataset?.illustrative ? (
+              <IllustrativeTag tooltip="No measured data imported — all values are ILLUSTRATIVE" />
+            ) : (
+              <span className="font-mono text-xs text-bl border border-bl/40 px-2 py-0.5 rounded">
+                MEASURED DATA
+              </span>
+            )}
+          </div>
         }
         actions={
           <div className="flex items-center gap-1.5 text-mut font-mono text-[11px]">
@@ -59,6 +63,12 @@ export const BenchmarksPage: React.FC = () => {
       />
 
       {/* Global ILLUSTRATIVE banner — required by spec */}
+      {dataset?.illustrative && (
+        <SimulatedDataTag
+          variant="banner"
+          message="SIMULATED BENCHMARK DATA (ILLUSTRATIVE) · Generated from seeded synthetic distributions, not live execution hardware"
+        />
+      )}
       {dataset?.illustrative && (
         <div
           role="alert"
