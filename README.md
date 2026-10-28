@@ -14,6 +14,7 @@ The frontend is a separate visual prototype. It uses local mock/browser state an
 
 The included records report:
 
+- This independent snapshot passed fresh same-laptop native-Linux prepared-host acceptance at source commit `2f73df8`: six real-model calibration calls, six authenticated demo calls, three-lane processing overlap, independent offline verification (exit 0), and cleanup. Its supported Windows application test subset passed 548 tests and 14 subtests, with one documented skip. The [current validation summary](backend/evidence/public-snapshot-validation-20261028.json) also discloses the retained failed attempt and fixture exclusions.
 - Step 6 evaluated 35 procedures: 19 PASS, 15 PARTIAL, and 1 INCONCLUSIVE. Three suites each reported 633 passed and one documented unsupported coordinated-rollback skip. The Linux run used the same laptop and shared WSL kernel, so it is not independent-hardware validation.
 - The candidate-bound prepared-host receipt records six real-model calibration calls, six authenticated demo calls, independent offline verification, and cleanup.
 - The pinned Playwright Docker run reported 96 UI E2E cases passed across desktop and mobile. It exercises the mock frontend only and does not add backend acceptance procedures.

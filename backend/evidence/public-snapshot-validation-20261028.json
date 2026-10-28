@@ -1,0 +1,69 @@
+{
+  "schema_version": "blindshield.public-snapshot-validation-summary.v1",
+  "recorded_date": "2026-10-28",
+  "date_timezone": "Asia/Calcutta",
+  "source_commit": "2f73df80ba05af51bc10554b606ba22ee3e89ff1",
+  "record_kind": "UNSIGNED_PROJECT_SUMMARY_FROM_RETAINED_LOCAL_ORIGINALS",
+  "fresh_prepared_host_admission": {
+    "result": "PASS_PREPARED_HOST_CANDIDATE_ACCEPTANCE",
+    "host_scope": "Existing Ubuntu 24.04 WSL2 acceptance distribution on the same laptop; not independent hardware",
+    "docker_endpoint_scope": "Previously configured local native Linux acceptance engine",
+    "static_and_service_admission_passed": true,
+    "calibration_real_model_dispatches": 6,
+    "authenticated_demo_real_model_dispatches": 6,
+    "offline_verifier_status": "PASS_PUBLIC_EVIDENCE",
+    "offline_verifier_exit_code": 0,
+    "owned_containers_cleaned_up": true,
+    "profile_sha256": "ad00d0aa513e07dedb563c43340262fea49acc5fc073c05134ce75fd08d4789c",
+    "static_grant_sha256": "e9a3d59ac3622576605a4e5b1c64727d5bfc2e3efdf245a01fa07795938387aa",
+    "calibration_sha256": "b5ef3ea685fcc5471f10807e91d5ad21d37de3cb7563c185146c39a10564eed8",
+    "service_grant_sha256": "106bb1a6cf595d132b1c7ee253e8ad387f4722fece7fba4b4ac68de863d9290b",
+    "acceptance_summary_sha256": "1d2cf6521fa10a4f7884211bcfa698e7cdc888cd7da6f1a1ebb094461a0deb43",
+    "full_t_p_acceptance": false,
+    "raw_artifacts_included": false,
+    "earlier_mounted_filesystem_attempt": {
+      "result": "FAILED_DEMO_THREE_REAL_PROCESSING_LANES_NOT_OBSERVED",
+      "static_calibration_service_gates_passed": true,
+      "offline_verifier_run": false,
+      "failure_record_sha256": "666189c88f2e4be27229836889716d859da75c4a75a72df9a6fc80f294b2ec5b",
+      "raw_attempt_retained_privately": true,
+      "new_attempt_used_new_native_filesystem_checkout_and_output": true,
+      "thresholds_or_runtime_source_changed": false
+    },
+    "limitations": "Fresh host/source admission is time-limited. Raw signed grants, profiles, credentials, logs, and evidence archive stay private; this projection does not independently reproduce their cryptographic verification."
+  },
+  "public_application_tests": {
+    "platform": "Windows / Python 3.12.10 / isolated candidate environment",
+    "passed": 548,
+    "skipped": 1,
+    "subtests_passed": 14,
+    "skip_reason": "Production independent-anchor coordinated rollback remains unsupported",
+    "excluded_modules": [
+      "test_memory_acceptance_evidence.py",
+      "test_memory_revision_support.py",
+      "test_n05_candidate_inventory.py",
+      "test_n08_owner_delegated_inputs.py"
+    ],
+    "exclusion_reason": "The first three are omitted with private memory/registry fixtures; the retained fourth tests historical owner input records omitted from the public snapshot.",
+    "test_log_sha256": "e1b96be03622b13899bd22e0e16d1bae14cecdd1fddd3a19d45815040873ced8",
+    "earlier_documented_command": {
+      "result": "FAILED_MISSING_HISTORICAL_OWNER_INPUT_FIXTURES",
+      "failed": 8,
+      "passed": 551,
+      "skipped": 1,
+      "subtests_passed": 24,
+      "log_sha256": "ac158f2f59693eec95dd4144d5b06e4b3a2393481cb74af4d79c7e960d71630e",
+      "raw_failure_log_retained_privately": true
+    }
+  },
+  "privacy_check": {
+    "result": "PASS_BOUNDED_PRIVACY_CHECK",
+    "regression_cases_passed": 5,
+    "scope": "Indexed content and reachable history; bounded path/key/token/artifact patterns"
+  },
+  "runtime_and_frontend_source_modified_from_sanitized_release": false,
+  "contributor_permission_records_inspected": 0,
+  "publication_status": "BLOCKED_PENDING_CONTRIBUTOR_PERMISSION_RECORD_REVIEW",
+  "remote_configured": false,
+  "published_or_pushed": false
+}

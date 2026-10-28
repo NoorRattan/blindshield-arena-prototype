@@ -8,12 +8,12 @@ It is a bounded prototype with known acceptance gaps. It has not passed every T/
 
 The measured run used Python 3.12 and Docker. Follow the [release runbook](docs/PROTOTYPE-RELEASE.md) for setup, fresh host admission, demo, shutdown, and verification. The [service guide](docs/PROTOTYPE-SERVICE.md) describes the authenticated lifecycle.
 
-The public source snapshot does not include model weights, OCI image archives, prepared corpus data, corpus openings, private signing keys, private stores, or external rollback-anchor state. The published profiles are historical and host-specific. This Git-history-free snapshot must first be initialized and committed in Git; then create new source-bound profiles, grants, and signatures with owner-managed authorities for the chosen host.
+The public source snapshot does not include model weights, OCI image archives, prepared corpus data, corpus openings, private signing keys, private stores, or external rollback-anchor state. This candidate has its own independent Git root. The published historical profiles remain host-specific; new execution requires source-bound profiles, grants, and signatures with owner-managed authorities. See [release readiness](../RELEASE-READINESS.md) for current validation status.
 
-The public test set omits the following private-data-specific modules: tests/test_memory_acceptance_evidence.py, tests/test_memory_revision_support.py, and tests/test_n05_candidate_inventory.py. To run the remaining application tests from backend/, use:
+The public test set omits three private-data-specific modules: tests/test_memory_acceptance_evidence.py, tests/test_memory_revision_support.py, and tests/test_n05_candidate_inventory.py. The retained tests/test_n08_owner_delegated_inputs.py checks historical owner-input records and host observations omitted from this snapshot; exclude it from the supported public application subset as well. Its missing-fixture failures were retained locally rather than treated as passing tests. From backend/, use:
 
 ~~~powershell
-python -m pytest -q tests --ignore=tests/test_memory_acceptance_evidence.py --ignore=tests/test_memory_revision_support.py --ignore=tests/test_n05_candidate_inventory.py
+python -m pytest -q tests --ignore=tests/test_memory_acceptance_evidence.py --ignore=tests/test_memory_revision_support.py --ignore=tests/test_n05_candidate_inventory.py --ignore=tests/test_n08_owner_delegated_inputs.py
 ~~~
 
 This test subset is not full acceptance. See the Step 6 report for its separate measured procedure results and limits.
