@@ -62,7 +62,7 @@ export const LiveBackendConsole: React.FC = () => {
 
   useEffect(() => {
     fetch('/local/create-request').then(async (response) => {
-      if (!response.ok) throw new Error('NIL — local backend profile unavailable.');
+      if (!response.ok) throw new Error('NIL â€” local backend profile unavailable.');
       const value = await response.json();
       setCreateRequest(JSON.stringify(value.request, null, 2));
     }).catch((failure: Error) => setProfileError(failure.message));
@@ -228,7 +228,7 @@ export const LiveBackendConsole: React.FC = () => {
       </header>
 
       <section className="rounded border border-bd bg-s1 p-4" aria-label="Backend data availability">
-        <h2 className="font-mono text-sm font-bold uppercase tracking-wider text-cy">{location.pathname === '/' ? 'Arena overview' : location.pathname.slice(1).replace('-', ' ')} · backend data</h2>
+        <h2 className="font-mono text-sm font-bold uppercase tracking-wider text-cy">{location.pathname === '/' ? 'Arena overview' : location.pathname.slice(1).replace('-', ' ')} Â· backend data</h2>
         <div className="mt-3 grid grid-cols-2 gap-3 font-mono text-xs text-mut sm:grid-cols-3">
           {['Model output', 'Latency', 'Attack success rate', 'Resource telemetry', 'Witness status', 'Evidence verification'].map((label) => <p key={label}>{label}: <strong className="text-tx">NIL</strong></p>)}
         </div>
@@ -271,7 +271,7 @@ export const LiveBackendConsole: React.FC = () => {
           <button type="button" onClick={refreshStatus} disabled={busy || !experimentId.trim()} className="inline-flex items-center gap-2 rounded border border-bd px-3 py-2 font-mono text-xs font-bold uppercase text-tx disabled:opacity-50">
             <RefreshCw className={`h-3.5 w-3.5 ${busy ? 'animate-spin' : ''}`} aria-hidden="true" /> Refresh status
           </button>
-          {!status && <p className="font-mono text-sm text-mut">Phase: NIL · Integrity: NIL · Domain: NIL</p>}
+          {!status && <p className="font-mono text-sm text-mut">Phase: NIL Â· Integrity: NIL Â· Domain: NIL</p>}
           {status && (
             <div className="rounded border border-bd bg-bg p-3">
               {isStatusEmbargoed ? (
