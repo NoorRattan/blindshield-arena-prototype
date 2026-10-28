@@ -1,0 +1,103 @@
+{
+  "schema_version": "blindshield.prototype-repository-validation.v1",
+  "date": "2026-10-28",
+  "date_timezone": "Asia/Calcutta",
+  "source_commit": "89540bdc0ea5f3a80a415cd2056721931f57ac0f",
+  "destination": "https://github.com/NoorRattan/blindshield-arena-prototype",
+  "source_scope": "Sanitized source history plus frontend delivery 5a6b557; original private history not imported",
+  "frontend": {
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "npm_ci_exit_code": 0,
+    "npm_run_verify_exit_code": 0,
+    "typecheck": "PASS",
+    "eslint": "PASS",
+    "vitest_files_passed": 32,
+    "vitest_tests_passed": 284,
+    "production_build": "PASS_WITH_LARGE_CHUNK_WARNINGS",
+    "verification_log_sha256": "b62b6a7e37d5ac2900c9f1bc37c4c54b2113a6a9772dbdb20eb6a726fcb0a159",
+    "source_manifest_sha256": "81ad58c293230c687ffc58448cbfb51ba4a94a795a18e585c389fb27345b645e",
+    "browser": {
+      "playwright_version": "1.50.1",
+      "browser": "Installed Microsoft Edge, headless",
+      "projects": [
+        "desktop-1440",
+        "mobile-390"
+      ],
+      "smoke_accessibility_cases_passed": 4,
+      "judge_rehearsal_cases_passed": 2,
+      "smoke_log_sha256": "81c39cb8fa34b6b0bf7d958b2c928c09a2c7220c5101fa5ebb2a298f9135e89c",
+      "rehearsal_log_sha256": "da5280b8e72e7afb7267dbee7cd235253ee3b91f50ff9ea925a4b3a51d52f6ec",
+      "scope": "Simulation UI only; selected cases, not a full browser-suite rerun or real-backend test",
+      "earlier_attempts_retained_privately": [
+        {
+          "result": "4_PASS_2_FAILED_NETWORKIDLE_TIMEOUT",
+          "log_sha256": "81c39cb8fa34b6b0bf7d958b2c928c09a2c7220c5101fa5ebb2a298f9135e89c"
+        },
+        {
+          "result": "1_PASS_1_FAILED_STALE_EMBARGO_LABEL",
+          "log_sha256": "92c89a2bca82718347b70570230639d4073d9d620f5903a04c1d9c88994c0365"
+        }
+      ],
+      "test_repairs": [
+        "Wait for visible UI assertions rather than background network idleness",
+        "Preserve simulated mode and selected role across walkthrough navigation",
+        "Assert the current static embargo projection and withheld decision state"
+      ]
+    },
+    "live_adapter_present": true,
+    "live_adapter_integration_suite_uses_mocked_fetch": true,
+    "browser_to_backend_mtls_integration_verified": false,
+    "npm_install_audit": {
+      "high": 8,
+      "moderate": 1,
+      "runtime_exploitability_assessed": false
+    }
+  },
+  "backend": {
+    "current_runtime_and_admission_input_bytes_match_fresh_profile": true,
+    "admitted_source_commit": "2f73df80ba05af51bc10554b606ba22ee3e89ff1",
+    "profile_sha256": "ad00d0aa513e07dedb563c43340262fea49acc5fc073c05134ce75fd08d4789c",
+    "new_model_workload_launched_for_this_packaging": false,
+    "new_backend_test_suite_run_for_this_packaging": false,
+    "historical_public_subset": {
+      "passed": 548,
+      "subtests_passed": 14,
+      "documented_skip": 1
+    },
+    "historical_fresh_prepared_host_run": {
+      "calibration_calls": 6,
+      "demo_calls": 6,
+      "offline_verifier_exit_code": 0,
+      "full_t_p_acceptance": false
+    }
+  },
+  "privacy": {
+    "result": "PASS_BOUNDED_PRIVACY_CHECK",
+    "issues": [],
+    "scope": "Indexed files and reachable history with bounded machine-path/key/token/private-artifact patterns",
+    "raw_logs_and_credentials_included": false
+  },
+  "presentation": {
+    "slides": 10,
+    "file": "submission/BlindShield_Arena_Final_Submission.pptx",
+    "sha256": "e47d2aecdb84d71619951c2d76b844f913bb0bfa092d13f102bd4121832d945d",
+    "frontend_status_updated": true
+  },
+  "permissions": {
+    "owner_confirmed_mit_publication": true,
+    "includes_updated_frontend": true,
+    "contributors": [
+      "Noor Rattan",
+      "Mayank Joshi",
+      "Monu Kumar"
+    ],
+    "private_correspondence_inspected": false
+  },
+  "limits": [
+    "Local prototype with mixed Step 6 outcomes",
+    "Owner-provisioned model/corpus/images/authorities needed for a real run",
+    "New live frontend requires further mTLS transport and endpoint/response integration",
+    "Same-laptop measurements do not establish independent-hardware validation"
+  ]
+}
