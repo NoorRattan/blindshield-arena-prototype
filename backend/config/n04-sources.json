@@ -1,0 +1,32 @@
+{
+  "schema_version": "arena-n04-preparation-sources.v1",
+  "scope": "Pinned preparation only; runtime never acquires artifacts",
+  "model_repository": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+  "model_revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+  "model_filename": "qwen2.5-0.5b-instruct-q4_k_m.gguf",
+  "model_bytes": 491400032,
+  "model_sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+  "model_license": "Apache-2.0",
+  "model_license_sha256": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e",
+  "model_readme_sha256": "fa1fede7f775a20f111cc098c00900092020572ce78976970a5b0ad9ca211999",
+  "llama_image": "ghcr.io/ggml-org/llama.cpp@sha256:9fbaa06d7f4449e2ae0d02b40e0431f7c212dcf231c9e3a7777a6afc2cc8f312",
+  "llama_source_revision": "1d88cb05f1a257f90741538ca3aca6c1b015c6d3",
+  "defense_python_base": "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1",
+  "platform": "linux/amd64",
+  "license_basis": "Exact Qwen LICENSE and card retained locally; preserve model Apache-2.0 and base-image Python/OS notices. Dataset admission uses separately preserved first-party MIT cards.",
+  "reference_corpus_receipt_sha256": "d9983081174f35a1a909348de8cfaa830cc85d43243ab6c0ad71da334e9ee32d",
+  "corpus_source_pins": [
+    {
+      "dataset": "JailbreakBench/JBB-Behaviors",
+      "revision": "886acc352a31533ffbcf4ef22c744658688086fc",
+      "file": "data/harmful-behaviors.csv",
+      "sha256": "4a8ec6832056b631eb092dccc60d37a61c3d441268268888b3d006288afeffa1"
+    },
+    {
+      "dataset": "JailbreakBench/JBB-Behaviors",
+      "revision": "886acc352a31533ffbcf4ef22c744658688086fc",
+      "file": "data/benign-behaviors.csv",
+      "sha256": "3cda234d21a991fa309bbfea4b6d9dae31ccdf8e9d452424b6a983e4fdc33468"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+# Reproducible metadata-only assembly from an immutable publisher binary image.
+# Model weights are verified separately and mounted read-only at runtime.
+ARG LLAMA_BASE
+FROM ${LLAMA_BASE}
+ARG LLAMA_REVISION
+ARG MODEL_SHA256
+ARG RECIPE_SHA256
+LABEL org.opencontainers.image.revision="${LLAMA_REVISION}" \
+      arena.model_sha256="${MODEL_SHA256}" \
+      arena.model_recipe_sha256="${RECIPE_SHA256}" \
+      arena.model_profile="qwen25-05b-cpu-component-v1"
+ENV HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+USER 65534:65534

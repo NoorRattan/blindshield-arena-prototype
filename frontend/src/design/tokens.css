@@ -1,0 +1,75 @@
+/* Self-hosted fonts - zero CDN network requests */
+@import '@fontsource/bebas-neue';
+@import '@fontsource/barlow/400.css';
+@import '@fontsource/barlow/500.css';
+@import '@fontsource/barlow/600.css';
+@import '@fontsource/dm-mono/400.css';
+@import '@fontsource/dm-mono/500.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+:root[data-theme="dark"] {
+  --bg: #080B10;
+  --s1: #0E131F;
+  --s2: #161D2E;
+  --bd: #232D42;
+  --bd-strong: #34425F;
+  --tx: #E8EDF5;
+  --mut: #8A97AD;
+  --dim: #5C6880;
+  --cy: #00E5FF;  /* interaction accent, active epoch */
+  --bl: #5897FF;  /* blue team (contrast > 6.0:1) */
+  --am: #FF9100;  /* red team */
+  --ok: #00E676;  /* verified valid */
+  --bad: #FF5E62; /* attack succeeded / breach (contrast > 5.8:1) */
+  --inv: #EA80FC; /* invalid / infrastructure failure (contrast > 6.5:1) */
+  --emb: #90A4AE; /* embargoed (contrast > 6.8:1) */
+}
+
+
+@layer base {
+  * {
+    border-color: var(--bd);
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--tx);
+    font-family: 'Barlow', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Data and numeric values default to tabular figures */
+  .font-mono,
+  code,
+  kbd,
+  samp,
+  pre {
+    font-family: 'DM Mono', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Headlines in Bebas Neue */
+  h1, h2, h3, .font-display {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* Hairline borders default */
+  .border-hairline {
+    border-width: 1px;
+    border-color: var(--bd);
+  }
+
+  /* Keyboard focus ring token */
+  :focus-visible {
+    outline: 2px solid var(--cy);
+    outline-offset: 3px;
+  }
+}

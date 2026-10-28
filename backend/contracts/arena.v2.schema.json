@@ -1,0 +1,2958 @@
+{
+  "contract_revision": "n02.1",
+  "note": "JSON Schema covers structure; Python validators enforce cross-field semantics. No HTTP server/authentication/durability implied.",
+  "protocol": "arena.v2",
+  "schemas": {
+    "ArtifactAAD": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "classification": {
+          "enum": [
+            "PUBLIC_METADATA",
+            "PRIVATE_PAYLOAD",
+            "PRIVATE_MODEL_OUTPUT",
+            "PRIVATE_DEFENSE",
+            "PRIVATE_MANIFEST"
+          ],
+          "title": "Classification",
+          "type": "string"
+        },
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "arena.v2",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "schema_version",
+        "artifact_id",
+        "classification"
+      ],
+      "title": "ArtifactAAD",
+      "type": "object"
+    },
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "ciphertext_sha256": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Ciphertext Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "ciphertext_sha256"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "AttackBatch": {
+      "$defs": {
+        "AttackItem": {
+          "additionalProperties": false,
+          "properties": {
+            "item_id": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+              "title": "Item Id",
+              "type": "string"
+            },
+            "text": {
+              "title": "Text",
+              "type": "string"
+            }
+          },
+          "required": [
+            "item_id",
+            "text"
+          ],
+          "title": "AttackItem",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/AttackItem"
+          },
+          "maxLength": 16,
+          "minLength": 1,
+          "title": "Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "epoch",
+        "items"
+      ],
+      "title": "AttackBatch",
+      "type": "object"
+    },
+    "AttemptResult": {
+      "additionalProperties": false,
+      "properties": {
+        "defense_mode": {
+          "enum": [
+            "INPUT",
+            "FEATURES",
+            "OUTPUT",
+            "POST_HOC"
+          ],
+          "title": "Defense Mode",
+          "type": "string"
+        },
+        "integrity": {
+          "enum": [
+            "PENDING",
+            "VALID_WITHIN_PROFILE",
+            "INVALID"
+          ],
+          "title": "Integrity",
+          "type": "string"
+        },
+        "model_execution": {
+          "enum": [
+            "NOT_EVALUATED",
+            "EXECUTED",
+            "UNKNOWN"
+          ],
+          "title": "Model Execution",
+          "type": "string"
+        },
+        "pipeline_disposition": {
+          "enum": [
+            "PENDING",
+            "ALLOWED",
+            "SANITIZED",
+            "BLOCKED_BY_DEFENSE",
+            "INFRASTRUCTURE_FAILED"
+          ],
+          "title": "Pipeline Disposition",
+          "type": "string"
+        },
+        "scoring": {
+          "enum": [
+            "NOT_EVALUATED",
+            "SCORED",
+            "UNCERTAIN",
+            "FAILED"
+          ],
+          "title": "Scoring",
+          "type": "string"
+        }
+      },
+      "required": [
+        "defense_mode",
+        "pipeline_disposition",
+        "model_execution",
+        "scoring",
+        "integrity"
+      ],
+      "title": "AttemptResult",
+      "type": "object"
+    },
+    "Checkpoint": {
+      "$defs": {
+        "ArtifactRef": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "ciphertext_sha256": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Ciphertext Sha256",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "ciphertext_sha256"
+          ],
+          "title": "ArtifactRef",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "event_count": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Event Count",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "final_root": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Final Root",
+          "type": "string"
+        },
+        "public_manifest_digest": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Public Manifest Digest",
+          "type": "string"
+        },
+        "required_artifacts": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "maxLength": 256,
+          "title": "Required Artifacts",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "arena.v2",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "signer_key_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Signer Key Id",
+          "type": "string"
+        },
+        "terminal_marker": {
+          "const": "CLOSED",
+          "title": "Terminal Marker",
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "schema_version",
+        "public_manifest_digest",
+        "event_count",
+        "final_root",
+        "terminal_marker",
+        "required_artifacts",
+        "signer_key_id"
+      ],
+      "title": "Checkpoint",
+      "type": "object"
+    },
+    "CloseResponse": {
+      "$defs": {
+        "ArtifactRef": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "ciphertext_sha256": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Ciphertext Sha256",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "ciphertext_sha256"
+          ],
+          "title": "ArtifactRef",
+          "type": "object"
+        },
+        "Checkpoint": {
+          "additionalProperties": false,
+          "properties": {
+            "domain_id": {
+              "title": "Domain Id",
+              "type": "string"
+            },
+            "epoch": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "title": "Epoch",
+              "type": "integer"
+            },
+            "event_count": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "title": "Event Count",
+              "type": "integer"
+            },
+            "experiment_id": {
+              "title": "Experiment Id",
+              "type": "string"
+            },
+            "final_root": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Final Root",
+              "type": "string"
+            },
+            "public_manifest_digest": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Public Manifest Digest",
+              "type": "string"
+            },
+            "required_artifacts": {
+              "items": {
+                "$ref": "#/$defs/ArtifactRef"
+              },
+              "maxLength": 256,
+              "title": "Required Artifacts",
+              "type": "array"
+            },
+            "schema_version": {
+              "const": "arena.v2",
+              "title": "Schema Version",
+              "type": "string"
+            },
+            "signer_key_id": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+              "title": "Signer Key Id",
+              "type": "string"
+            },
+            "terminal_marker": {
+              "const": "CLOSED",
+              "title": "Terminal Marker",
+              "type": "string"
+            }
+          },
+          "required": [
+            "domain_id",
+            "experiment_id",
+            "epoch",
+            "schema_version",
+            "public_manifest_digest",
+            "event_count",
+            "final_root",
+            "terminal_marker",
+            "required_artifacts",
+            "signer_key_id"
+          ],
+          "title": "Checkpoint",
+          "type": "object"
+        },
+        "SignedCheckpoint": {
+          "additionalProperties": false,
+          "properties": {
+            "checkpoint": {
+              "$ref": "#/$defs/Checkpoint"
+            },
+            "signature": {
+              "maxLength": 128,
+              "minLength": 128,
+              "pattern": "^[0-9a-f]{128}$",
+              "title": "Signature",
+              "type": "string"
+            }
+          },
+          "required": [
+            "checkpoint",
+            "signature"
+          ],
+          "title": "SignedCheckpoint",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint": {
+          "$ref": "#/$defs/SignedCheckpoint"
+        },
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "phase": {
+          "const": "CLOSED",
+          "title": "Phase",
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "phase",
+        "checkpoint"
+      ],
+      "title": "CloseResponse",
+      "type": "object"
+    },
+    "Context": {
+      "additionalProperties": false,
+      "properties": {
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch"
+      ],
+      "title": "Context",
+      "type": "object"
+    },
+    "CreateExperiment": {
+      "additionalProperties": false,
+      "properties": {
+        "budget_profile_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Budget Profile Id",
+          "type": "string"
+        },
+        "dataset_catalog_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Dataset Catalog Id",
+          "type": "string"
+        },
+        "defense_mode": {
+          "enum": [
+            "INPUT",
+            "FEATURES",
+            "OUTPUT",
+            "POST_HOC"
+          ],
+          "title": "Defense Mode",
+          "type": "string"
+        },
+        "defense_version_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Defense Version Id",
+          "type": "string"
+        },
+        "disclosure_profile_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Disclosure Profile Id",
+          "type": "string"
+        },
+        "interaction_mode": {
+          "enum": [
+            "INTERACTIVE",
+            "SEALED_BATCH"
+          ],
+          "title": "Interaction Mode",
+          "type": "string"
+        },
+        "model_version_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Model Version Id",
+          "type": "string"
+        },
+        "profile_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "rubric_version_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Rubric Version Id",
+          "type": "string"
+        },
+        "strategy_version_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Strategy Version Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile_id",
+        "model_version_id",
+        "defense_version_id",
+        "rubric_version_id",
+        "disclosure_profile_id",
+        "interaction_mode",
+        "defense_mode",
+        "dataset_catalog_id",
+        "strategy_version_id",
+        "budget_profile_id"
+      ],
+      "title": "CreateExperiment",
+      "type": "object"
+    },
+    "DefenseDecision": {
+      "additionalProperties": false,
+      "properties": {
+        "call_token": {
+          "title": "Call Token",
+          "type": "string"
+        },
+        "reason_code": {
+          "enum": [
+            "NONE",
+            "INJECTION_PATTERN",
+            "TOXICITY_PATTERN",
+            "SCHEMA_POLICY",
+            "UNSUPPORTED",
+            "BUDGET_POLICY"
+          ],
+          "title": "Reason Code",
+          "type": "string"
+        },
+        "transform_id": {
+          "anyOf": [
+            {
+              "const": "REDACT_REGISTERED_MATCHES_V1",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Transform Id"
+        },
+        "verdict": {
+          "enum": [
+            "ALLOW",
+            "BLOCK",
+            "SANITIZE"
+          ],
+          "title": "Verdict",
+          "type": "string"
+        }
+      },
+      "required": [
+        "call_token",
+        "verdict",
+        "reason_code",
+        "transform_id"
+      ],
+      "title": "DefenseDecision",
+      "type": "object"
+    },
+    "DefenseRequest": {
+      "$defs": {
+        "FeaturesContent": {
+          "additionalProperties": false,
+          "properties": {
+            "control_marker_present": {
+              "title": "Control Marker Present",
+              "type": "boolean"
+            },
+            "length_bucket": {
+              "enum": [
+                "SHORT",
+                "MEDIUM",
+                "LONG"
+              ],
+              "title": "Length Bucket",
+              "type": "string"
+            }
+          },
+          "required": [
+            "length_bucket",
+            "control_marker_present"
+          ],
+          "title": "FeaturesContent",
+          "type": "object"
+        },
+        "FeaturesDefenseRequest": {
+          "additionalProperties": false,
+          "properties": {
+            "call_token": {
+              "title": "Call Token",
+              "type": "string"
+            },
+            "content": {
+              "$ref": "#/$defs/FeaturesContent"
+            },
+            "mode": {
+              "const": "FEATURES",
+              "title": "Mode",
+              "type": "string"
+            }
+          },
+          "required": [
+            "call_token",
+            "mode",
+            "content"
+          ],
+          "title": "FeaturesDefenseRequest",
+          "type": "object"
+        },
+        "InputDefenseRequest": {
+          "additionalProperties": false,
+          "properties": {
+            "call_token": {
+              "title": "Call Token",
+              "type": "string"
+            },
+            "content": {
+              "$ref": "#/$defs/PromptContent"
+            },
+            "mode": {
+              "const": "INPUT",
+              "title": "Mode",
+              "type": "string"
+            }
+          },
+          "required": [
+            "call_token",
+            "mode",
+            "content"
+          ],
+          "title": "InputDefenseRequest",
+          "type": "object"
+        },
+        "OutputDefenseRequest": {
+          "additionalProperties": false,
+          "properties": {
+            "call_token": {
+              "title": "Call Token",
+              "type": "string"
+            },
+            "content": {
+              "$ref": "#/$defs/ResponseContent"
+            },
+            "mode": {
+              "const": "OUTPUT",
+              "title": "Mode",
+              "type": "string"
+            }
+          },
+          "required": [
+            "call_token",
+            "mode",
+            "content"
+          ],
+          "title": "OutputDefenseRequest",
+          "type": "object"
+        },
+        "PostHocContent": {
+          "additionalProperties": false,
+          "properties": {
+            "prompt": {
+              "title": "Prompt",
+              "type": "string"
+            },
+            "response": {
+              "title": "Response",
+              "type": "string"
+            }
+          },
+          "required": [
+            "prompt",
+            "response"
+          ],
+          "title": "PostHocContent",
+          "type": "object"
+        },
+        "PostHocDefenseRequest": {
+          "additionalProperties": false,
+          "properties": {
+            "call_token": {
+              "title": "Call Token",
+              "type": "string"
+            },
+            "content": {
+              "$ref": "#/$defs/PostHocContent"
+            },
+            "mode": {
+              "const": "POST_HOC",
+              "title": "Mode",
+              "type": "string"
+            }
+          },
+          "required": [
+            "call_token",
+            "mode",
+            "content"
+          ],
+          "title": "PostHocDefenseRequest",
+          "type": "object"
+        },
+        "PromptContent": {
+          "additionalProperties": false,
+          "properties": {
+            "prompt": {
+              "title": "Prompt",
+              "type": "string"
+            }
+          },
+          "required": [
+            "prompt"
+          ],
+          "title": "PromptContent",
+          "type": "object"
+        },
+        "ResponseContent": {
+          "additionalProperties": false,
+          "properties": {
+            "response": {
+              "title": "Response",
+              "type": "string"
+            }
+          },
+          "required": [
+            "response"
+          ],
+          "title": "ResponseContent",
+          "type": "object"
+        }
+      },
+      "discriminator": {
+        "mapping": {
+          "FEATURES": "#/$defs/FeaturesDefenseRequest",
+          "INPUT": "#/$defs/InputDefenseRequest",
+          "OUTPUT": "#/$defs/OutputDefenseRequest",
+          "POST_HOC": "#/$defs/PostHocDefenseRequest"
+        },
+        "propertyName": "mode"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/InputDefenseRequest"
+        },
+        {
+          "$ref": "#/$defs/FeaturesDefenseRequest"
+        },
+        {
+          "$ref": "#/$defs/OutputDefenseRequest"
+        },
+        {
+          "$ref": "#/$defs/PostHocDefenseRequest"
+        }
+      ]
+    },
+    "EmbargoedView": {
+      "additionalProperties": false,
+      "description": "No context/phase/count/timing fields: blue-human active projection is static.",
+      "properties": {
+        "status": {
+          "const": "EMBARGOED",
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "title": "EmbargoedView",
+      "type": "object"
+    },
+    "EpochRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "epoch"
+      ],
+      "title": "EpochRequest",
+      "type": "object"
+    },
+    "ErrorResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "enum": [
+            "INVALID_SCHEMA",
+            "UNAUTHORIZED",
+            "FORBIDDEN",
+            "NOT_FOUND",
+            "WRONG_PHASE",
+            "STALE_EPOCH",
+            "VERSION_MISMATCH",
+            "IDEMPOTENCY_CONFLICT",
+            "BODY_TOO_LARGE",
+            "RESOURCE_BUDGET_EXCEEDED",
+            "AUDIT_UNAVAILABLE",
+            "MODEL_UNAVAILABLE",
+            "POLICY_NOT_READY",
+            "DEADLINE_EXCEEDED"
+          ],
+          "title": "Code",
+          "type": "string"
+        },
+        "request_id": {
+          "title": "Request Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "request_id"
+      ],
+      "title": "ErrorResponse",
+      "type": "object"
+    },
+    "Event": {
+      "$defs": {
+        "ArtifactRef": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "ciphertext_sha256": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Ciphertext Sha256",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "ciphertext_sha256"
+          ],
+          "title": "ArtifactRef",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "actor_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Actor Id",
+          "type": "string"
+        },
+        "artifact_ciphertext_refs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "maxLength": 256,
+          "title": "Artifact Ciphertext Refs",
+          "type": "array"
+        },
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "duration_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Duration Us",
+          "type": "integer"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "event_type": {
+          "enum": [
+            "MANIFEST_SEALED",
+            "PREFLIGHT_PASSED",
+            "START_RESERVED",
+            "TURN_COMMITTED",
+            "DISPATCH_INTENT",
+            "DEFENSE_RESULT",
+            "MODEL_RESULT",
+            "SCORE_RESULT",
+            "FEEDBACK_AUTHORIZED",
+            "INTEGRITY_VIOLATION",
+            "CLOSE_REQUESTED",
+            "CLOSED"
+          ],
+          "title": "Event Type",
+          "type": "string"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "outcome_code": {
+          "enum": [
+            "OK",
+            "ALLOW",
+            "BLOCK",
+            "SANITIZE",
+            "FAILED",
+            "UNKNOWN",
+            "INVALID",
+            "UNAUTHORIZED",
+            "FORBIDDEN",
+            "NOT_FOUND",
+            "INVALID_SCHEMA",
+            "WRONG_PHASE",
+            "STALE_EPOCH",
+            "VERSION_MISMATCH",
+            "IDEMPOTENCY_CONFLICT",
+            "BODY_TOO_LARGE",
+            "RESOURCE_BUDGET_EXCEEDED",
+            "AUDIT_UNAVAILABLE",
+            "MODEL_UNAVAILABLE",
+            "POLICY_NOT_READY",
+            "DEADLINE_EXCEEDED"
+          ],
+          "title": "Outcome Code",
+          "type": "string"
+        },
+        "previous_digest": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Previous Digest",
+          "type": "string"
+        },
+        "public_manifest_digest": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Public Manifest Digest",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "arena.v2",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "sequence": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "session_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Session Id"
+        },
+        "turn_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Turn Id"
+        },
+        "turn_index": {
+          "anyOf": [
+            {
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Turn Index"
+        },
+        "utc_time": {
+          "title": "Utc Time",
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "session_id",
+        "turn_id",
+        "turn_index",
+        "event_type",
+        "outcome_code",
+        "artifact_ciphertext_refs",
+        "duration_us",
+        "schema_version",
+        "sequence",
+        "previous_digest",
+        "actor_id",
+        "public_manifest_digest",
+        "utc_time"
+      ],
+      "title": "Event",
+      "type": "object"
+    },
+    "EventProposal": {
+      "$defs": {
+        "ArtifactRef": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "ciphertext_sha256": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Ciphertext Sha256",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "ciphertext_sha256"
+          ],
+          "title": "ArtifactRef",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Authenticated caller proposes only these fields; recorder supplies all others.",
+      "properties": {
+        "artifact_ciphertext_refs": {
+          "items": {
+            "$ref": "#/$defs/ArtifactRef"
+          },
+          "maxLength": 256,
+          "title": "Artifact Ciphertext Refs",
+          "type": "array"
+        },
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "duration_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Duration Us",
+          "type": "integer"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "event_type": {
+          "enum": [
+            "MANIFEST_SEALED",
+            "PREFLIGHT_PASSED",
+            "START_RESERVED",
+            "TURN_COMMITTED",
+            "DISPATCH_INTENT",
+            "DEFENSE_RESULT",
+            "MODEL_RESULT",
+            "SCORE_RESULT",
+            "FEEDBACK_AUTHORIZED",
+            "INTEGRITY_VIOLATION",
+            "CLOSE_REQUESTED",
+            "CLOSED"
+          ],
+          "title": "Event Type",
+          "type": "string"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "outcome_code": {
+          "enum": [
+            "OK",
+            "ALLOW",
+            "BLOCK",
+            "SANITIZE",
+            "FAILED",
+            "UNKNOWN",
+            "INVALID",
+            "UNAUTHORIZED",
+            "FORBIDDEN",
+            "NOT_FOUND",
+            "INVALID_SCHEMA",
+            "WRONG_PHASE",
+            "STALE_EPOCH",
+            "VERSION_MISMATCH",
+            "IDEMPOTENCY_CONFLICT",
+            "BODY_TOO_LARGE",
+            "RESOURCE_BUDGET_EXCEEDED",
+            "AUDIT_UNAVAILABLE",
+            "MODEL_UNAVAILABLE",
+            "POLICY_NOT_READY",
+            "DEADLINE_EXCEEDED"
+          ],
+          "title": "Outcome Code",
+          "type": "string"
+        },
+        "session_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Session Id"
+        },
+        "turn_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Turn Id"
+        },
+        "turn_index": {
+          "anyOf": [
+            {
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Turn Index"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "session_id",
+        "turn_id",
+        "turn_index",
+        "event_type",
+        "outcome_code",
+        "artifact_ciphertext_refs",
+        "duration_us"
+      ],
+      "title": "EventProposal",
+      "type": "object"
+    },
+    "ExperimentCreated": {
+      "additionalProperties": false,
+      "properties": {
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "phase": {
+          "const": "CREATED",
+          "title": "Phase",
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "phase"
+      ],
+      "title": "ExperimentCreated",
+      "type": "object"
+    },
+    "GateFacts": {
+      "additionalProperties": false,
+      "description": "Trusted controller derives facts from verified receipts, never public JSON.",
+      "properties": {
+        "admissions_closed": {
+          "default": false,
+          "title": "Admissions Closed",
+          "type": "boolean"
+        },
+        "all_turns_settled": {
+          "default": false,
+          "title": "All Turns Settled",
+          "type": "boolean"
+        },
+        "dataset_admitted": {
+          "default": false,
+          "title": "Dataset Admitted",
+          "type": "boolean"
+        },
+        "dispatch_intent_durable": {
+          "default": false,
+          "title": "Dispatch Intent Durable",
+          "type": "boolean"
+        },
+        "fresh_lane_verified": {
+          "default": false,
+          "title": "Fresh Lane Verified",
+          "type": "boolean"
+        },
+        "model_artifacts_locked": {
+          "default": false,
+          "title": "Model Artifacts Locked",
+          "type": "boolean"
+        },
+        "release_policy_authorized": {
+          "default": false,
+          "title": "Release Policy Authorized",
+          "type": "boolean"
+        },
+        "runtime_profile_verified": {
+          "default": false,
+          "title": "Runtime Profile Verified",
+          "type": "boolean"
+        },
+        "seal_admission_verified": {
+          "default": false,
+          "title": "Seal Admission Verified",
+          "type": "boolean"
+        },
+        "terminal_evidence_durable": {
+          "default": false,
+          "title": "Terminal Evidence Durable",
+          "type": "boolean"
+        },
+        "witness_start_acknowledged": {
+          "default": false,
+          "title": "Witness Start Acknowledged",
+          "type": "boolean"
+        }
+      },
+      "title": "GateFacts",
+      "type": "object"
+    },
+    "IdempotencyScope": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Action",
+          "type": "string"
+        },
+        "client_key": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[!-~]+$",
+          "title": "Client Key",
+          "type": "string"
+        },
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "subject_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Subject Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "subject_id",
+        "action",
+        "client_key"
+      ],
+      "title": "IdempotencyScope",
+      "type": "object"
+    },
+    "PayloadProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "immutable_revision": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Immutable Revision",
+          "type": "string"
+        },
+        "license_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "License Id",
+          "type": "string"
+        },
+        "record_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Record Id",
+          "type": "string"
+        },
+        "run_label": {
+          "enum": [
+            "SYNTHETIC_MOCK",
+            "REAL_PUBLIC",
+            "AUTHORIZED_PRIVATE"
+          ],
+          "title": "Run Label",
+          "type": "string"
+        },
+        "source_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_sha256": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "immutable_revision",
+        "source_sha256",
+        "record_id",
+        "license_id",
+        "run_label"
+      ],
+      "title": "PayloadProvenance",
+      "type": "object"
+    },
+    "PhaseReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "phase": {
+          "enum": [
+            "CREATED",
+            "SEALED",
+            "READY",
+            "RUNNING",
+            "SCORED",
+            "INVALID",
+            "CLOSED",
+            "RELEASED"
+          ],
+          "title": "Phase",
+          "type": "string"
+        },
+        "receipt_id": {
+          "title": "Receipt Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "phase",
+        "receipt_id"
+      ],
+      "title": "PhaseReceipt",
+      "type": "object"
+    },
+    "Principal": {
+      "additionalProperties": false,
+      "description": "Trusted transport result, never a public caller-supplied identity header.",
+      "properties": {
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "expires_at": {
+          "title": "Expires At",
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "operator",
+            "red",
+            "blue-human",
+            "blue-runtime",
+            "broker",
+            "target",
+            "recorder",
+            "witness",
+            "auditor"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "subject_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Subject Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "subject_id",
+        "role",
+        "domain_id",
+        "expires_at"
+      ],
+      "title": "Principal",
+      "type": "object"
+    },
+    "ReleaseResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "integrity": {
+          "enum": [
+            "VALID_WITHIN_PROFILE",
+            "INVALID"
+          ],
+          "title": "Integrity",
+          "type": "string"
+        },
+        "phase": {
+          "const": "RELEASED",
+          "title": "Phase",
+          "type": "string"
+        },
+        "release_receipt_id": {
+          "title": "Release Receipt Id",
+          "type": "string"
+        },
+        "terminal_checkpoint_digest": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Terminal Checkpoint Digest",
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "phase",
+        "release_receipt_id",
+        "terminal_checkpoint_digest",
+        "integrity"
+      ],
+      "title": "ReleaseResponse",
+      "type": "object"
+    },
+    "ResolvedPayload": {
+      "$defs": {
+        "PayloadProvenance": {
+          "additionalProperties": false,
+          "properties": {
+            "immutable_revision": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+              "title": "Immutable Revision",
+              "type": "string"
+            },
+            "license_id": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+              "title": "License Id",
+              "type": "string"
+            },
+            "record_id": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+              "title": "Record Id",
+              "type": "string"
+            },
+            "run_label": {
+              "enum": [
+                "SYNTHETIC_MOCK",
+                "REAL_PUBLIC",
+                "AUTHORIZED_PRIVATE"
+              ],
+              "title": "Run Label",
+              "type": "string"
+            },
+            "source_id": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+              "title": "Source Id",
+              "type": "string"
+            },
+            "source_sha256": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Source Sha256",
+              "type": "string"
+            }
+          },
+          "required": [
+            "source_id",
+            "immutable_revision",
+            "source_sha256",
+            "record_id",
+            "license_id",
+            "run_label"
+          ],
+          "title": "PayloadProvenance",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Private broker/data boundary; never a participant response.",
+      "properties": {
+        "payload_ref": {
+          "title": "Payload Ref",
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/$defs/PayloadProvenance"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "payload_ref",
+        "text",
+        "provenance"
+      ],
+      "title": "ResolvedPayload",
+      "type": "object"
+    },
+    "SealResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "phase": {
+          "const": "SEALED",
+          "title": "Phase",
+          "type": "string"
+        },
+        "public_commitment": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Public Commitment",
+          "type": "string"
+        },
+        "receipt_id": {
+          "title": "Receipt Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "phase",
+        "receipt_id",
+        "public_commitment"
+      ],
+      "title": "SealResponse",
+      "type": "object"
+    },
+    "SessionCreated": {
+      "additionalProperties": false,
+      "properties": {
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "session_id": {
+          "title": "Session Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "session_id"
+      ],
+      "title": "SessionCreated",
+      "type": "object"
+    },
+    "SignedCheckpoint": {
+      "$defs": {
+        "ArtifactRef": {
+          "additionalProperties": false,
+          "properties": {
+            "artifact_id": {
+              "title": "Artifact Id",
+              "type": "string"
+            },
+            "ciphertext_sha256": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Ciphertext Sha256",
+              "type": "string"
+            }
+          },
+          "required": [
+            "artifact_id",
+            "ciphertext_sha256"
+          ],
+          "title": "ArtifactRef",
+          "type": "object"
+        },
+        "Checkpoint": {
+          "additionalProperties": false,
+          "properties": {
+            "domain_id": {
+              "title": "Domain Id",
+              "type": "string"
+            },
+            "epoch": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "title": "Epoch",
+              "type": "integer"
+            },
+            "event_count": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "title": "Event Count",
+              "type": "integer"
+            },
+            "experiment_id": {
+              "title": "Experiment Id",
+              "type": "string"
+            },
+            "final_root": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Final Root",
+              "type": "string"
+            },
+            "public_manifest_digest": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Public Manifest Digest",
+              "type": "string"
+            },
+            "required_artifacts": {
+              "items": {
+                "$ref": "#/$defs/ArtifactRef"
+              },
+              "maxLength": 256,
+              "title": "Required Artifacts",
+              "type": "array"
+            },
+            "schema_version": {
+              "const": "arena.v2",
+              "title": "Schema Version",
+              "type": "string"
+            },
+            "signer_key_id": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+              "title": "Signer Key Id",
+              "type": "string"
+            },
+            "terminal_marker": {
+              "const": "CLOSED",
+              "title": "Terminal Marker",
+              "type": "string"
+            }
+          },
+          "required": [
+            "domain_id",
+            "experiment_id",
+            "epoch",
+            "schema_version",
+            "public_manifest_digest",
+            "event_count",
+            "final_root",
+            "terminal_marker",
+            "required_artifacts",
+            "signer_key_id"
+          ],
+          "title": "Checkpoint",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint": {
+          "$ref": "#/$defs/Checkpoint"
+        },
+        "signature": {
+          "maxLength": 128,
+          "minLength": 128,
+          "pattern": "^[0-9a-f]{128}$",
+          "title": "Signature",
+          "type": "string"
+        }
+      },
+      "required": [
+        "checkpoint",
+        "signature"
+      ],
+      "title": "SignedCheckpoint",
+      "type": "object"
+    },
+    "SignedTurnReceipt": {
+      "$defs": {
+        "TurnReceipt": {
+          "additionalProperties": false,
+          "properties": {
+            "domain_id": {
+              "title": "Domain Id",
+              "type": "string"
+            },
+            "epoch": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "title": "Epoch",
+              "type": "integer"
+            },
+            "event_count": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "title": "Event Count",
+              "type": "integer"
+            },
+            "experiment_id": {
+              "title": "Experiment Id",
+              "type": "string"
+            },
+            "input_commitment": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Input Commitment",
+              "type": "string"
+            },
+            "prefix_root": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Prefix Root",
+              "type": "string"
+            },
+            "public_response_commitment": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Public Response Commitment",
+              "type": "string"
+            },
+            "schema_version": {
+              "const": "arena.v2",
+              "title": "Schema Version",
+              "type": "string"
+            },
+            "session_id": {
+              "title": "Session Id",
+              "type": "string"
+            },
+            "signer_key_id": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+              "title": "Signer Key Id",
+              "type": "string"
+            },
+            "turn_id": {
+              "title": "Turn Id",
+              "type": "string"
+            },
+            "turn_index": {
+              "maximum": 2147483647,
+              "minimum": 0,
+              "title": "Turn Index",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "domain_id",
+            "experiment_id",
+            "epoch",
+            "session_id",
+            "turn_id",
+            "turn_index",
+            "schema_version",
+            "input_commitment",
+            "event_count",
+            "prefix_root",
+            "public_response_commitment",
+            "signer_key_id"
+          ],
+          "title": "TurnReceipt",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "receipt": {
+          "$ref": "#/$defs/TurnReceipt"
+        },
+        "signature": {
+          "maxLength": 128,
+          "minLength": 128,
+          "pattern": "^[0-9a-f]{128}$",
+          "title": "Signature",
+          "type": "string"
+        }
+      },
+      "required": [
+        "receipt",
+        "signature"
+      ],
+      "title": "SignedTurnReceipt",
+      "type": "object"
+    },
+    "SignedWitnessClose": {
+      "$defs": {
+        "WitnessClose": {
+          "additionalProperties": false,
+          "properties": {
+            "checkpoint_digest": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Checkpoint Digest",
+              "type": "string"
+            },
+            "domain_id": {
+              "title": "Domain Id",
+              "type": "string"
+            },
+            "epoch": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "title": "Epoch",
+              "type": "integer"
+            },
+            "event_count": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "title": "Event Count",
+              "type": "integer"
+            },
+            "experiment_id": {
+              "title": "Experiment Id",
+              "type": "string"
+            },
+            "final_root": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Final Root",
+              "type": "string"
+            },
+            "public_manifest_digest": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Public Manifest Digest",
+              "type": "string"
+            },
+            "receipt_type": {
+              "const": "CLOSE",
+              "title": "Receipt Type",
+              "type": "string"
+            },
+            "schema_version": {
+              "const": "arena.v2",
+              "title": "Schema Version",
+              "type": "string"
+            },
+            "witness_key_id": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+              "title": "Witness Key Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "domain_id",
+            "experiment_id",
+            "epoch",
+            "schema_version",
+            "receipt_type",
+            "public_manifest_digest",
+            "checkpoint_digest",
+            "event_count",
+            "final_root",
+            "witness_key_id"
+          ],
+          "title": "WitnessClose",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "receipt": {
+          "$ref": "#/$defs/WitnessClose"
+        },
+        "signature": {
+          "maxLength": 128,
+          "minLength": 128,
+          "pattern": "^[0-9a-f]{128}$",
+          "title": "Signature",
+          "type": "string"
+        }
+      },
+      "required": [
+        "receipt",
+        "signature"
+      ],
+      "title": "SignedWitnessClose",
+      "type": "object"
+    },
+    "SignedWitnessStart": {
+      "$defs": {
+        "WitnessStart": {
+          "additionalProperties": false,
+          "properties": {
+            "domain_id": {
+              "title": "Domain Id",
+              "type": "string"
+            },
+            "epoch": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "title": "Epoch",
+              "type": "integer"
+            },
+            "event_count": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "title": "Event Count",
+              "type": "integer"
+            },
+            "experiment_id": {
+              "title": "Experiment Id",
+              "type": "string"
+            },
+            "prefix_root": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Prefix Root",
+              "type": "string"
+            },
+            "public_manifest_digest": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Public Manifest Digest",
+              "type": "string"
+            },
+            "receipt_type": {
+              "const": "START",
+              "title": "Receipt Type",
+              "type": "string"
+            },
+            "reservation_id": {
+              "title": "Reservation Id",
+              "type": "string"
+            },
+            "schema_version": {
+              "const": "arena.v2",
+              "title": "Schema Version",
+              "type": "string"
+            },
+            "witness_key_id": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+              "title": "Witness Key Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "domain_id",
+            "experiment_id",
+            "epoch",
+            "schema_version",
+            "receipt_type",
+            "public_manifest_digest",
+            "reservation_id",
+            "event_count",
+            "prefix_root",
+            "witness_key_id"
+          ],
+          "title": "WitnessStart",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "receipt": {
+          "$ref": "#/$defs/WitnessStart"
+        },
+        "signature": {
+          "maxLength": 128,
+          "minLength": 128,
+          "pattern": "^[0-9a-f]{128}$",
+          "title": "Signature",
+          "type": "string"
+        }
+      },
+      "required": [
+        "receipt",
+        "signature"
+      ],
+      "title": "SignedWitnessStart",
+      "type": "object"
+    },
+    "StartResponse": {
+      "$defs": {
+        "SignedWitnessStart": {
+          "additionalProperties": false,
+          "properties": {
+            "receipt": {
+              "$ref": "#/$defs/WitnessStart"
+            },
+            "signature": {
+              "maxLength": 128,
+              "minLength": 128,
+              "pattern": "^[0-9a-f]{128}$",
+              "title": "Signature",
+              "type": "string"
+            }
+          },
+          "required": [
+            "receipt",
+            "signature"
+          ],
+          "title": "SignedWitnessStart",
+          "type": "object"
+        },
+        "WitnessStart": {
+          "additionalProperties": false,
+          "properties": {
+            "domain_id": {
+              "title": "Domain Id",
+              "type": "string"
+            },
+            "epoch": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "title": "Epoch",
+              "type": "integer"
+            },
+            "event_count": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "title": "Event Count",
+              "type": "integer"
+            },
+            "experiment_id": {
+              "title": "Experiment Id",
+              "type": "string"
+            },
+            "prefix_root": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Prefix Root",
+              "type": "string"
+            },
+            "public_manifest_digest": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Public Manifest Digest",
+              "type": "string"
+            },
+            "receipt_type": {
+              "const": "START",
+              "title": "Receipt Type",
+              "type": "string"
+            },
+            "reservation_id": {
+              "title": "Reservation Id",
+              "type": "string"
+            },
+            "schema_version": {
+              "const": "arena.v2",
+              "title": "Schema Version",
+              "type": "string"
+            },
+            "witness_key_id": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+              "title": "Witness Key Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "domain_id",
+            "experiment_id",
+            "epoch",
+            "schema_version",
+            "receipt_type",
+            "public_manifest_digest",
+            "reservation_id",
+            "event_count",
+            "prefix_root",
+            "witness_key_id"
+          ],
+          "title": "WitnessStart",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "phase": {
+          "const": "RUNNING",
+          "title": "Phase",
+          "type": "string"
+        },
+        "receipt_id": {
+          "title": "Receipt Id",
+          "type": "string"
+        },
+        "witness_start_receipt": {
+          "$ref": "#/$defs/SignedWitnessStart"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "phase",
+        "receipt_id",
+        "witness_start_receipt"
+      ],
+      "title": "StartResponse",
+      "type": "object"
+    },
+    "TargetRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "attempt_id": {
+          "title": "Attempt Id",
+          "type": "string"
+        },
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "max_output_tokens": {
+          "maximum": 256,
+          "minimum": 1,
+          "title": "Max Output Tokens",
+          "type": "integer"
+        },
+        "session_id": {
+          "title": "Session Id",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "turn_index": {
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "Turn Index",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "attempt_id",
+        "session_id",
+        "turn_index",
+        "text",
+        "max_output_tokens"
+      ],
+      "title": "TargetRequest",
+      "type": "object"
+    },
+    "TargetResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "attempt_id": {
+          "title": "Attempt Id",
+          "type": "string"
+        },
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "duration_us": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Duration Us",
+          "type": "integer"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "input_tokens": {
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "Input Tokens",
+          "type": "integer"
+        },
+        "output_tokens": {
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "Output Tokens",
+          "type": "integer"
+        },
+        "session_id": {
+          "title": "Session Id",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "turn_index": {
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "Turn Index",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "attempt_id",
+        "session_id",
+        "turn_index",
+        "text",
+        "input_tokens",
+        "output_tokens",
+        "duration_us"
+      ],
+      "title": "TargetResponse",
+      "type": "object"
+    },
+    "TurnContext": {
+      "additionalProperties": false,
+      "properties": {
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "session_id": {
+          "title": "Session Id",
+          "type": "string"
+        },
+        "turn_id": {
+          "title": "Turn Id",
+          "type": "string"
+        },
+        "turn_index": {
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "Turn Index",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "session_id",
+        "turn_id",
+        "turn_index"
+      ],
+      "title": "TurnContext",
+      "type": "object"
+    },
+    "TurnFeedback": {
+      "$defs": {
+        "SignedTurnReceipt": {
+          "additionalProperties": false,
+          "properties": {
+            "receipt": {
+              "$ref": "#/$defs/TurnReceipt"
+            },
+            "signature": {
+              "maxLength": 128,
+              "minLength": 128,
+              "pattern": "^[0-9a-f]{128}$",
+              "title": "Signature",
+              "type": "string"
+            }
+          },
+          "required": [
+            "receipt",
+            "signature"
+          ],
+          "title": "SignedTurnReceipt",
+          "type": "object"
+        },
+        "TurnReceipt": {
+          "additionalProperties": false,
+          "properties": {
+            "domain_id": {
+              "title": "Domain Id",
+              "type": "string"
+            },
+            "epoch": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "title": "Epoch",
+              "type": "integer"
+            },
+            "event_count": {
+              "maximum": 2147483647,
+              "minimum": 1,
+              "title": "Event Count",
+              "type": "integer"
+            },
+            "experiment_id": {
+              "title": "Experiment Id",
+              "type": "string"
+            },
+            "input_commitment": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Input Commitment",
+              "type": "string"
+            },
+            "prefix_root": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Prefix Root",
+              "type": "string"
+            },
+            "public_response_commitment": {
+              "maxLength": 64,
+              "minLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Public Response Commitment",
+              "type": "string"
+            },
+            "schema_version": {
+              "const": "arena.v2",
+              "title": "Schema Version",
+              "type": "string"
+            },
+            "session_id": {
+              "title": "Session Id",
+              "type": "string"
+            },
+            "signer_key_id": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+              "title": "Signer Key Id",
+              "type": "string"
+            },
+            "turn_id": {
+              "title": "Turn Id",
+              "type": "string"
+            },
+            "turn_index": {
+              "maximum": 2147483647,
+              "minimum": 0,
+              "title": "Turn Index",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "domain_id",
+            "experiment_id",
+            "epoch",
+            "session_id",
+            "turn_id",
+            "turn_index",
+            "schema_version",
+            "input_commitment",
+            "event_count",
+            "prefix_root",
+            "public_response_commitment",
+            "signer_key_id"
+          ],
+          "title": "TurnReceipt",
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "properties": {
+        "feedback_receipt": {
+          "$ref": "#/$defs/SignedTurnReceipt"
+        },
+        "padding": {
+          "maxLength": 131072,
+          "pattern": "^ *$",
+          "title": "Padding",
+          "type": "string"
+        },
+        "public_reply": {
+          "title": "Public Reply",
+          "type": "string"
+        },
+        "public_status": {
+          "enum": [
+            "COMPLETED",
+            "INFRASTRUCTURE_UNAVAILABLE"
+          ],
+          "title": "Public Status",
+          "type": "string"
+        },
+        "session_id": {
+          "title": "Session Id",
+          "type": "string"
+        },
+        "turn_id": {
+          "title": "Turn Id",
+          "type": "string"
+        },
+        "turn_index": {
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "Turn Index",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "turn_id",
+        "session_id",
+        "turn_index",
+        "public_reply",
+        "public_status",
+        "feedback_receipt",
+        "padding"
+      ],
+      "title": "TurnFeedback",
+      "type": "object"
+    },
+    "TurnReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "event_count": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Event Count",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "input_commitment": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Input Commitment",
+          "type": "string"
+        },
+        "prefix_root": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Prefix Root",
+          "type": "string"
+        },
+        "public_response_commitment": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Public Response Commitment",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "arena.v2",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "session_id": {
+          "title": "Session Id",
+          "type": "string"
+        },
+        "signer_key_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Signer Key Id",
+          "type": "string"
+        },
+        "turn_id": {
+          "title": "Turn Id",
+          "type": "string"
+        },
+        "turn_index": {
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "Turn Index",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "session_id",
+        "turn_id",
+        "turn_index",
+        "schema_version",
+        "input_commitment",
+        "event_count",
+        "prefix_root",
+        "public_response_commitment",
+        "signer_key_id"
+      ],
+      "title": "TurnReceipt",
+      "type": "object"
+    },
+    "TurnSubmission": {
+      "additionalProperties": false,
+      "properties": {
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "payload_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Payload Ref"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        },
+        "turn_index": {
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "Turn Index",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "epoch",
+        "turn_index"
+      ],
+      "title": "TurnSubmission",
+      "type": "object"
+    },
+    "UploadReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted_items": {
+          "maximum": 16,
+          "minimum": 1,
+          "title": "Accepted Items",
+          "type": "integer"
+        },
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "receipt_id": {
+          "title": "Receipt Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "receipt_id",
+        "accepted_items"
+      ],
+      "title": "UploadReceipt",
+      "type": "object"
+    },
+    "WitnessClose": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint_digest": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Checkpoint Digest",
+          "type": "string"
+        },
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "event_count": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Event Count",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "final_root": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Final Root",
+          "type": "string"
+        },
+        "public_manifest_digest": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Public Manifest Digest",
+          "type": "string"
+        },
+        "receipt_type": {
+          "const": "CLOSE",
+          "title": "Receipt Type",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "arena.v2",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "witness_key_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Witness Key Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "schema_version",
+        "receipt_type",
+        "public_manifest_digest",
+        "checkpoint_digest",
+        "event_count",
+        "final_root",
+        "witness_key_id"
+      ],
+      "title": "WitnessClose",
+      "type": "object"
+    },
+    "WitnessStart": {
+      "additionalProperties": false,
+      "properties": {
+        "domain_id": {
+          "title": "Domain Id",
+          "type": "string"
+        },
+        "epoch": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Epoch",
+          "type": "integer"
+        },
+        "event_count": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Event Count",
+          "type": "integer"
+        },
+        "experiment_id": {
+          "title": "Experiment Id",
+          "type": "string"
+        },
+        "prefix_root": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Prefix Root",
+          "type": "string"
+        },
+        "public_manifest_digest": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Public Manifest Digest",
+          "type": "string"
+        },
+        "receipt_type": {
+          "const": "START",
+          "title": "Receipt Type",
+          "type": "string"
+        },
+        "reservation_id": {
+          "title": "Reservation Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "arena.v2",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "witness_key_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+          "title": "Witness Key Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "domain_id",
+        "experiment_id",
+        "epoch",
+        "schema_version",
+        "receipt_type",
+        "public_manifest_digest",
+        "reservation_id",
+        "event_count",
+        "prefix_root",
+        "witness_key_id"
+      ],
+      "title": "WitnessStart",
+      "type": "object"
+    }
+  }
+}

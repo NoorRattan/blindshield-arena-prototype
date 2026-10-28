@@ -1,0 +1,242 @@
+{
+  "SealedTransportPlan": {
+    "$defs": {
+      "FeedbackPolicy": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": "arena-n06-feedback-policy.v1",
+            "default": "arena-n06-feedback-policy.v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "policy_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+            "title": "Policy Id",
+            "type": "string"
+          },
+          "run_label": {
+            "enum": [
+              "SYNTHETIC_MOCK",
+              "REAL_PUBLIC"
+            ],
+            "title": "Run Label",
+            "type": "string"
+          },
+          "execution_deadline_ms": {
+            "maximum": 120000,
+            "minimum": 1,
+            "title": "Execution Deadline Ms",
+            "type": "integer"
+          },
+          "release_floor_ms": {
+            "maximum": 120000,
+            "minimum": 1,
+            "title": "Release Floor Ms",
+            "type": "integer"
+          },
+          "body_bytes": {
+            "maximum": 131072,
+            "minimum": 2048,
+            "title": "Body Bytes",
+            "type": "integer"
+          },
+          "scope": {
+            "const": "N06_COMPONENT_ONLY_UNCALIBRATED",
+            "default": "N06_COMPONENT_ONLY_UNCALIBRATED",
+            "title": "Scope",
+            "type": "string"
+          }
+        },
+        "required": [
+          "policy_id",
+          "run_label",
+          "execution_deadline_ms",
+          "release_floor_ms",
+          "body_bytes"
+        ],
+        "title": "FeedbackPolicy",
+        "type": "object"
+      },
+      "LabProfile": {
+        "additionalProperties": false,
+        "properties": {
+          "domain_id": {
+            "title": "Domain Id",
+            "type": "string"
+          },
+          "experiment_id": {
+            "title": "Experiment Id",
+            "type": "string"
+          },
+          "epoch": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "title": "Epoch",
+            "type": "integer"
+          },
+          "schema_version": {
+            "const": "arena-n06-local-mtls-profile.v1",
+            "default": "arena-n06-local-mtls-profile.v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "scope": {
+            "const": "LOCAL_MTLS_MEASUREMENT_POC",
+            "default": "LOCAL_MTLS_MEASUREMENT_POC",
+            "title": "Scope",
+            "type": "string"
+          },
+          "execution_lock_sha256": {
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Execution Lock Sha256",
+            "type": "string"
+          },
+          "feedback_policy_sha256": {
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Feedback Policy Sha256",
+            "type": "string"
+          },
+          "admission_window_ms": {
+            "default": 1000,
+            "maximum": 2000,
+            "minimum": 100,
+            "title": "Admission Window Ms",
+            "type": "integer"
+          },
+          "bind_address": {
+            "const": "127.0.0.1",
+            "default": "127.0.0.1",
+            "title": "Bind Address",
+            "type": "string"
+          },
+          "max_workers": {
+            "const": 3,
+            "default": 3,
+            "title": "Max Workers",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "domain_id",
+          "experiment_id",
+          "epoch",
+          "execution_lock_sha256",
+          "feedback_policy_sha256"
+        ],
+        "title": "LabProfile",
+        "type": "object"
+      },
+      "SignedLabProfile": {
+        "additionalProperties": false,
+        "properties": {
+          "profile": {
+            "$ref": "#/$defs/LabProfile"
+          },
+          "signer_key_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+            "title": "Signer Key Id",
+            "type": "string"
+          },
+          "signature": {
+            "maxLength": 128,
+            "minLength": 128,
+            "pattern": "^[0-9a-f]{128}$",
+            "title": "Signature",
+            "type": "string"
+          }
+        },
+        "required": [
+          "profile",
+          "signer_key_id",
+          "signature"
+        ],
+        "title": "SignedLabProfile",
+        "type": "object"
+      },
+      "SignedPolicy": {
+        "additionalProperties": false,
+        "properties": {
+          "policy": {
+            "$ref": "#/$defs/FeedbackPolicy"
+          },
+          "signer_key_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+            "title": "Signer Key Id",
+            "type": "string"
+          },
+          "signature": {
+            "maxLength": 128,
+            "minLength": 128,
+            "pattern": "^[0-9a-f]{128}$",
+            "title": "Signature",
+            "type": "string"
+          }
+        },
+        "required": [
+          "policy",
+          "signer_key_id",
+          "signature"
+        ],
+        "title": "SignedPolicy",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": "arena-n06-sealed-transport.v1",
+        "default": "arena-n06-sealed-transport.v1",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "feedback": {
+        "$ref": "#/$defs/SignedPolicy"
+      },
+      "transport": {
+        "$ref": "#/$defs/SignedLabProfile"
+      }
+    },
+    "required": [
+      "feedback",
+      "transport"
+    ],
+    "title": "SealedTransportPlan",
+    "type": "object"
+  },
+  "SealIntent": {
+    "additionalProperties": false,
+    "description": "Trusted internal idempotency intent, never a public EpochRequest extension.",
+    "properties": {
+      "epoch": {
+        "maximum": 2147483647,
+        "minimum": 1,
+        "title": "Epoch",
+        "type": "integer"
+      },
+      "transport_plan_sha256": {
+        "maxLength": 64,
+        "minLength": 64,
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Transport Plan Sha256",
+        "type": "string"
+      }
+    },
+    "required": [
+      "epoch",
+      "transport_plan_sha256"
+    ],
+    "title": "SealIntent",
+    "type": "object"
+  }
+}

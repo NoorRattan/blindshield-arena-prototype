@@ -1,0 +1,81 @@
+artifacts/
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies and build outputs
+node_modules
+frontend/node_modules
+dist
+frontend/dist
+dist-ssr
+frontend/dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment
+frontend/.env
+frontend/.env.local
+frontend/.env.production
+frontend/.env.development
+
+# Test and Playwright
+test-results/
+frontend/test-results/
+playwright-report/
+frontend/playwright-report/
+blob-report/
+frontend/blob-report/
+playwright/.cache/
+frontend/playwright/.cache/
+
+# Ignored operational, documentation, loop, memory and prompt directories (root and frontend)
+docs/
+docs
+docks/
+docks
+loop/
+loop
+memory/
+memory
+memory files/
+memory files
+prompts/
+prompts
+frontend/docs/
+frontend/docs
+frontend/docks/
+frontend/docks
+frontend/loop/
+frontend/loop
+frontend/memory/
+frontend/memory
+frontend/memory files/
+frontend/memory files
+frontend/prompts/
+
+# The backend documentation is part of the release reviewer packet.
+!/backend/docs/
+!/backend/docs/**
+frontend/prompts

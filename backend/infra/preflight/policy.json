@@ -1,0 +1,14 @@
+{
+  "schema": "arena-preflight-policy.v1",
+  "scope": "synthetic local readiness fixture only",
+  "automatic_pulls": false,
+  "remote_daemons_allowed_for_fixture": false,
+  "approved_probe_images": [],
+  "image_admission_requirements": [
+    "Trusted source and applicable license/notices reviewed",
+    "Exact local sha256 image ID independently checked",
+    "Only fixed synthetic /bin/sh fixture commands; no real/private data",
+    "Admission owner and source revision/checksum recorded before approval"
+  ],
+  "guarantee_tier_from_inventory_alone": null
+}

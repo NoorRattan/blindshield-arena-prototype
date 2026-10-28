@@ -1,0 +1,55 @@
+{
+  "schema_version": "blindshield-step7-prepared-host-acceptance.v1",
+  "run_date": "2026-10-28",
+  "scope": "PREPARED_HOST_HISTORY_FREE_CANDIDATE_ACCEPTANCE_NOT_FULL_T_P_OR_PUBLICATION",
+  "source_commit": "0091c06407da259c907058662f915060fe48838a",
+  "host_scope": "Docker Desktop Linux engine on the same Windows laptop; prepared-host evidence, not independent-hardware validation.",
+  "host_measurement": {
+    "method": "Direct Docker info query after acceptance; same engine used for all stages.",
+    "operating_system": "linux",
+    "engine_version": "29.9.2",
+    "engine_cpus": 24,
+    "engine_memory_bytes": 15506010112
+  },
+  "stages": [
+    { "name": "prepare", "exit_code": 0, "duration_seconds": 5.203 },
+    { "name": "STATIC", "exit_code": 0, "receipt_sha256": "abd3375a12f7737a0e4079ff81f774349e8914c0d11cbf96c0c3a2e0c7a196e8", "duration_seconds": 5.703 },
+    { "name": "CALIBRATION", "exit_code": 0, "receipt_sha256": "b10a06c392ff4c9a033093e1e04414188f40b36c2d15c4f2f1e86483c7f89f0f", "duration_seconds": 38.797 },
+    { "name": "SERVICE", "exit_code": 0, "receipt_sha256": "6564e1e637f0dbf46b9291d2f72976a8aa7d1ce632c0a6a82b93bde393e8418e", "duration_seconds": 7.578 },
+    { "name": "authenticated_demo_and_offline_verification", "exit_code": 0, "receipt_sha256": "12a194579f761400ab5fb147941292f057ed31ab5d5acb7b2e92a5e8adeed829", "duration_seconds": 161.203 }
+  ],
+  "profile_sha256": "269796169f2781dfef8887b16e41d086621b7b3eb57f1e59f7e01d2a01b24ce4",
+  "calibration": {
+    "real_model_dispatches": 6,
+    "owned_containers_cleaned_up": true
+  },
+  "demo": {
+    "interaction_mode": "INTERACTIVE",
+    "defense_mode": "INPUT",
+    "real_model_dispatches": 6,
+    "authenticated_denial_idempotency_and_embargo_checks_passed": true,
+    "offline_verifier_status": "PASS_PUBLIC_EVIDENCE",
+    "offline_verifier_exit_code": 0,
+    "owned_containers_cleaned_up": true,
+    "full_t_p_acceptance": false
+  },
+  "docker_post_run": {
+    "method": "Read-only Docker container count immediately after the orchestrator exited.",
+    "running_containers": 0,
+    "all_containers": 3,
+    "note": "Three older exited containers remained; the run's owned containers were cleaned up."
+  },
+  "step6_procedure_outcomes": { "total": 35, "pass": 19, "partial": 15, "inconclusive": 1 },
+  "private_run_artifacts_committed": false,
+  "public_release_or_event_submission": false,
+  "public_release_blockers": [
+    "The project license and complete dependency/image license review remain unresolved; dataset rights and provenance need owner confirmation.",
+    "The published 2026-10-27 23:59 IST event cutoff has passed; no public extension or late-submission path was found.",
+    "Required social posts and event-form submission have not been completed; organizer accounts and event-specific disclosure requirements need owner review.",
+    "This is a local owner-review candidate with no remote; it is not a public release."
+  ],
+  "official_event_sources": [
+    "https://api.unstop.com/hackathons/hack-in-hills-26-galgotias-university-gu-greater-noida-1752595",
+    "https://hackinhills.com/"
+  ]
+}

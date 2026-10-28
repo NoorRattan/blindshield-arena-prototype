@@ -1,0 +1,16 @@
+[Unit]
+Description=BlindShield isolated acceptance Docker engine
+After=network.target
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/dockerd --host=unix:///run/blindshield-docker.sock --data-root=/var/lib/blindshield-docker --exec-root=/run/blindshield-docker --pidfile=/run/blindshield-docker.pid --exec-opt=native.cgroupdriver=systemd --bridge=none --iptables=false --ip6tables=false --ip-forward=false --ip-masq=false
+Delegate=yes
+KillMode=process
+TimeoutStartSec=60
+TasksMax=infinity
+MemoryAccounting=yes
+CPUAccounting=yes
+IOAccounting=yes
+AllowedCPUs=0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+Restart=no

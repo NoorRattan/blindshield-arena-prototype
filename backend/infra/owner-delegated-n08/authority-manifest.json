@@ -1,0 +1,46 @@
+{
+  "artifact_label": "OWNER-DELEGATED, SELF-ATTESTED, PROTOTYPE-SCOPE",
+  "authorities": [
+    {
+      "algorithm": "ECDSA-P256-SHA256",
+      "certificate_file": "demo-ca-certificate.pem",
+      "certificate_sha256": "c68060f6e711710868c8c08d46654f5bfbcd4dc90316d5079338d25cdee68e15",
+      "key_id": "n08-prototype-ca-001",
+      "private_key_filename": "demo-ca-private.pem",
+      "public_key_sha256": "f7feda5decf9ac83b0a8c39d0042017df5682e5929899a7001bb780f464b645d",
+      "role": "demo_ca"
+    },
+    {
+      "algorithm": "Ed25519",
+      "key_id": "n08-prototype-recorder-001",
+      "private_key_filename": "recorder-private.pem",
+      "public_key_file": "recorder-public.pem",
+      "public_key_sha256": "66f29e540b4bce45200487c3983c099e08f1773127b2259e605ea3ab7dae558d",
+      "public_pem_sha256": "22af59ba2a224014c602535cfab55037c785491fb3c7584f69fe88e3488714c7",
+      "role": "recorder"
+    },
+    {
+      "algorithm": "Ed25519",
+      "key_id": "n08-prototype-witness-001",
+      "private_key_filename": "witness-private.pem",
+      "public_key_file": "witness-public.pem",
+      "public_key_sha256": "110afb9bd23e6eeb5ee616a8ce1f4a0cb010c93ada2804214dbfe6a00623a205",
+      "public_pem_sha256": "fc7f45aa630402504552a5d95a154cfcf13bc4b4b5d53a1364d03b600f28eef1",
+      "role": "witness"
+    }
+  ],
+  "generated_at_utc": "2026-10-25T20:09:54Z",
+  "generator": {
+    "cryptography": "50.0.2",
+    "python": "3.12",
+    "rng": "cryptography secure backend"
+  },
+  "private_key_custody": {
+    "directory_acl": "owner_and_SYSTEM_only_noninherited",
+    "location_class": "outside_repository_user_local_appdata",
+    "private_key_files_committed": false
+  },
+  "schema": "arena-owner-delegated-n08-authorities.v1",
+  "scope_limit": "single-host prototype identities; no external trust, host-wide rollback protection, or production key custody claim",
+  "status": "SELF_ATTESTED_PROTOTYPE_ONLY_NOT_INDEPENDENTLY_VERIFIED"
+}

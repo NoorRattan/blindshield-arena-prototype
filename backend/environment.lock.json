@@ -1,0 +1,190 @@
+{
+  "schema": "arena-environment-lock.v1",
+  "status": "INCOMPLETE_NOT_READY",
+  "lock_complete": false,
+  "scope": "Historical N01/N03 inventory plus separate MEM-014 local N04 admission; full arena lock remains incomplete",
+  "observed_at_utc": "2026-10-20T03:44:18.545301+00:00",
+  "inventory_receipt": null,
+  "inventory_receipt_sha256": "877ac00c78389a24487164a87fe8b742f6d520bed26cc3c3acbc1ad3f46b7ed1",
+  "host_inventory": {
+    "os": "Microsoft Windows 11 Home Single Language",
+    "version": "10.0.26300",
+    "memory_total_bytes": 33412722688,
+    "memory_available_bytes": 11938856960,
+    "cpu": "AMD Ryzen AI 9 HX 370 w/ Radeon 890M",
+    "physical_cores": 12,
+    "logical_cpus": 24,
+    "windows_administrator": false
+  },
+  "tooling": {
+    "python_version": "3.12.10",
+    "docker_client_version": "29.9.1",
+    "compose_client_version": "5.6.0"
+  },
+  "linux_runtime": {
+    "server_version": "29.9.1",
+    "kernel_version": "6.18.33.2-microsoft-standard-WSL2",
+    "image_ids": [],
+    "effective_profile_id": null,
+    "guarantee_tier_achieved": null,
+    "linux_engine_reachable_at_inspection": true
+  },
+  "model": {
+    "candidate": "Qwen2.5-0.5B-Instruct",
+    "artifact_sha256": null,
+    "tokenizer_sha256": null,
+    "backend_revision": null,
+    "license_lock": null,
+    "model_specific_input_token_cap": null,
+    "three_lane_peak_memory_measured": false
+  },
+  "resource_policy": {
+    "host_memory_reserve_bytes": null,
+    "model_lane_memory_limit_bytes": null,
+    "model_lane_cpu_sets": null,
+    "shaping_floor_us": null,
+    "policy_frozen": false
+  },
+  "authorities": {
+    "demo_ca_key_id": null,
+    "recorder_public_key_id": null,
+    "witness_public_key_id": null
+  },
+  "preparation_sources": "infra/source-allowlist.json",
+  "synthetic_fixture_policy": "infra/preflight/policy.json",
+  "blocked_prerequisites": [
+    "Approved local fixture image absent",
+    "Actual baseline confinement/network policy unverified",
+    "Real model and runtime artifacts not pinned",
+    "Model lane capacity/reset/overlap unmeasured",
+    "Identity and evidence authorities not provisioned"
+  ],
+  "backend_foundation": {
+    "contract_revision": "n02.1",
+    "dependency_lock": "requirements.lock",
+    "dependency_lock_sha256": "0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678",
+    "tested_environment": "Python 3.12 Windows; primary and offline-reproduction environments",
+    "pydantic_version": "2.14.1",
+    "cryptography_version": "50.0.2",
+    "pytest_version": "9.1.1",
+    "model_or_linux_runtime_ready": false
+  },
+  "historical_inventory_receipt": null,
+  "historical_inventory_receipt_sha256": "6868dc864acda99ce3a586e3c962b0dc32b2a735398b77d43bb533950e12db54",
+  "historical_n01_mutations": {
+    "docker_start_attempted": true,
+    "docker_left_stopped": true,
+    "socket_backup_rename_succeeded": false,
+    "docker_reset_performed": false,
+    "images_or_volumes_deleted": false,
+    "global_ml_packages_changed": false,
+    "frontend_changed": false
+  },
+  "mutations_this_step": {
+    "docker_start_result": "already running",
+    "images_pulled": false,
+    "containers_launched": false,
+    "frontend_changed": false,
+    "global_ml_packages_changed": false,
+    "local_tls_sqlite_component_tests": true,
+    "temporary_dev_keys_created": true,
+    "temporary_server_processes_terminated": true
+  },
+  "broker_control": {
+    "receipt": null,
+    "receipt_sha256": "dbaf6b9aa58b0f082da65bbe08cb28aec07848d11950487e6faa3810b48e732e",
+    "live_local_mtls": true,
+    "durable_reservations": true,
+    "real_execution_available": false,
+    "production_identity_layout": false
+  },
+  "backend_layout": {
+    "root": "backend",
+    "historical_receipts_rewritten": false,
+    "receipt": null,
+    "receipt_sha256": "383e7e43e769ae6faafb3196757adcfd884b73d2e5bb7f2ec4304765f5fbcd2e"
+  },
+  "path_conventions": "Backend-local paths except receipt fields pointing to project-memory evidence; original historic receipt paths retain repository-root meaning.",
+  "previous_inventory_receipt": null,
+  "previous_inventory_receipt_sha256": "4edfc4cb06b840c9c82d470e31ce60da750d511d07458b80e8e43a7343c956ea",
+  "n04_local_profile": {
+    "receipt": null,
+    "receipt_sha256": "06b373b910acf3ab754f388fff9e1e8e87d7b56c3f00c53b9104b8ffa3215a8c",
+    "public_admission": null,
+    "admission_sha256": "a54264c5375677d5ee9e81163a2acd033c8597f333a5b0cdc75c9338be1eed0f",
+    "scope": "ONE_TRUSTED_LOCAL_FUNCTIONAL_LANE",
+    "full_arena_ready": false
+  },
+  "n05_candidate": {
+    "schema_version": "arena-n05-environment-candidate.v1",
+    "status": "CANDIDATE_NOT_N08_ADMISSION",
+    "scope": "N05_LOCAL_THREE_PROCESS_BASELINE_NOT_FULL_ARENA_ACCEPTANCE",
+    "source_revision": "MEM-041",
+    "base_commit": "7b754fd6194525730d2a2f31595c651193a43d42",
+    "base_tree": "d515e6583e0ece5ca14722bff9840571b48d1e26",
+    "receipt_path": null,
+    "receipt_sha256": "c7ccbb5935cd4ebe1979e443f6edc30312cac04560197f791cf1aaec2b05ef38",
+    "outputs_index_path": null,
+    "outputs_index_sha256": "4b059f769fb444845f3f01f43294ad8b8f9b96243fc674b3d3379d17856a66b8",
+    "admission_sha256": "00076ac3ddb866c3e1483934b070d1eca0ece9f9671571979c687cff10a0b112",
+    "cell_admission_sha256": "e4793207c14b5ede78fe8c552aaf8a41b8cc0f172323a4adb86db6f848bdec08",
+    "model": {
+      "repository": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+      "revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+      "filename": "qwen2.5-0.5b-instruct-q4_k_m.gguf",
+      "bytes": 491400032,
+      "sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+      "license": "Apache-2.0",
+      "license_sha256": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e",
+      "readme_sha256": "fa1fede7f775a20f111cc098c00900092020572ce78976970a5b0ad9ca211999",
+      "tokenizer_binding": "EMBEDDED_IN_EXACT_GGUF"
+    },
+    "images": {
+      "model": {
+        "reference": "ghcr.io/ggml-org/llama.cpp@sha256:9fbaa06d7f4449e2ae0d02b40e0431f7c212dcf231c9e3a7777a6afc2cc8f312",
+        "digest": "sha256:9fbaa06d7f4449e2ae0d02b40e0431f7c212dcf231c9e3a7777a6afc2cc8f312",
+        "source_revision": "1d88cb05f1a257f90741538ca3aca6c1b015c6d3",
+        "platform": "linux/amd64"
+      },
+      "defense": {
+        "digest": "sha256:c2ba5e610d1064f1a8b84ee3b1455942eeccca3d90a02909eda80b8f5d26658c",
+        "python_base": "python@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1",
+        "platform": "linux/amd64"
+      }
+    },
+    "runtime_limits": {
+      "context_tokens": 2048,
+      "input_token_cap": 1536,
+      "max_output_tokens": 64,
+      "deadline_seconds": 45
+    },
+    "resources": {
+      "model_cpu_sets": [
+        "0,1,2,3",
+        "4,5,6,7",
+        "8,9,10,11"
+      ],
+      "defense_cpu_set": "12,13,14,15,16,17,18,19,20,21,22,23",
+      "model_lane_memory_limit_bytes": 2147483648,
+      "model_lane_memory_limit_source": "backend/src/arena/integration/runtime.py",
+      "minimum_available_memory_bytes": 7516192768,
+      "linux_vm_available_bytes_before_cells": 14494973952,
+      "windows_host_available_bytes_during_n05_observation": 7292239872,
+      "capacity_floor_bytes_during_n05_observation": 7516192768,
+      "windows_host_below_floor_by_bytes": 223952896
+    },
+    "bounded_n05_measurements": {
+      "observed_processing_overlap_ns": 2730000000,
+      "containers_changed_before_reuse": [
+        true,
+        true,
+        true
+      ],
+      "host_cpu_exclusivity_verified": false,
+      "full_probe_acceptance": false,
+      "full_arena_acceptance": false,
+      "guarantee_tier_achieved": null
+    },
+    "n08_workload_authorized": false
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "checked_at_utc": "2026-10-28T07:11:21Z",
+  "source": "GitHub Global Advisory Database REST API, exact-version affects filter",
+  "source_docs": "https://docs.github.com/en/rest/security-advisories/global-advisories",
+  "scope": "Exact package/version matches for every pin in backend/requirements.lock only.",
+  "requirements_lock_sha256": "0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678",
+  "package_pin_count": 15,
+  "overall_result": "NO_MATCHING_ADVISORIES",
+  "queries": [
+    {
+      "package": "annotated-types",
+      "canonical_package": "annotated-types",
+      "version": "0.8.0",
+      "request_url": "https://api.github.com/advisories?affects=annotated-types%400.8.0&per_page=100",
+      "http_status": 200,
+      "matching_advisory_count": 0,
+      "matching_advisory_ids": []
+    },
+    {
+      "package": "cffi",
+      "canonical_package": "cffi",
+      "version": "2.1.1",
+      "request_url": "https://api.github.com/advisories?affects=cffi%402.1.1&per_page=100",
+      "http_status": 200,
+      "matching_advisory_count": 0,
+      "matching_advisory_ids": []
+    },
+    {
+      "package": "colorama",
+      "canonical_package": "colorama",
+      "version": "0.4.6",
+      "request_url": "https://api.github.com/advisories?affects=colorama%400.4.6&per_page=100",
+      "http_status": 200,
+      "matching_advisory_count": 0,
+      "matching_advisory_ids": []
+    },
+    {
+      "package": "cryptography",
+      "canonical_package": "cryptography",
+      "version": "50.0.2",
+      "request_url": "https://api.github.com/advisories?affects=cryptography%4050.0.2&per_page=100",
+      "http_status": 200,
+      "matching_advisory_count": 0,
+      "matching_advisory_ids": []
+    },
+    {
+      "package": "iniconfig",
+      "canonical_package": "iniconfig",
+      "version": "2.3.1",
+      "request_url": "https://api.github.com/advisories?affects=iniconfig%402.3.1&per_page=100",
+      "http_status": 200,
+      "matching_advisory_count": 0,
+      "matching_advisory_ids": []
+    },
+    {
+      "package": "packaging",
+      "canonical_package": "packaging",
+      "version": "26.3",
+      "request_url": "https://api.github.com/advisories?affects=packaging%4026.3&per_page=100",
+      "http_status": 200,
+      "matching_advisory_count": 0,
+      "matching_advisory_ids": []
+    },
+    {
+      "package": "pluggy",
+      "canonical_package": "pluggy",
+      "version": "1.7.0",
+      "request_url": "https://api.github.com/advisories?affects=pluggy%401.7.0&per_page=100",
+      "http_status": 200,
+      "matching_advisory_count": 0,
+      "matching_advisory_ids": []
+    },
+    {
+      "package": "pycparser",
+      "canonical_package": "pycparser",
+      "version": "3.11",
+      "request_url": "https://api.github.com/advisories?affects=pycparser%403.11&per_page=100",
+      "http_status": 200,
+      "matching_advisory_count": 0,
+      "matching_advisory_ids": []
+    },
+    {
+      "package": "pydantic",
+      "canonical_package": "pydantic",
+      "version": "2.14.1",
+      "request_url": "https://api.github.com/advisories?affects=pydantic%402.14.1&per_page=100",
+      "http_status": 200,
+      "matching_advisory_count": 0,
+      "matching_advisory_ids": []
+    },
+    {
+      "package": "pydantic_core",
+      "canonical_package": "pydantic-core",
+      "version": "2.50.1",
+      "request_url": "https://api.github.com/advisories?affects=pydantic-core%402.50.1&per_page=100",
+      "http_status": 200,
+      "matching_advisory_count": 0,
+      "matching_advisory_ids": []
+    },
+    {
+      "package": "Pygments",
+      "canonical_package": "pygments",
+      "version": "2.21.0",
+      "request_url": "https://api.github.com/advisories?affects=pygments%402.21.0&per_page=100",
+      "http_status": 200,
+      "matching_advisory_count": 0,
+      "matching_advisory_ids": []
+    },
+    {
+      "package": "pytest",
+      "canonical_package": "pytest",
+      "version": "9.1.1",
+      "request_url": "https://api.github.com/advisories?affects=pytest%409.1.1&per_page=100",
+      "http_status": 200,
+      "matching_advisory_count": 0,
+      "matching_advisory_ids": []
+    },
+    {
+      "package": "setuptools",
+      "canonical_package": "setuptools",
+      "version": "84.2.0",
+      "request_url": "https://api.github.com/advisories?affects=setuptools%4084.2.0&per_page=100",
+      "http_status": 200,
+      "matching_advisory_count": 0,
+      "matching_advisory_ids": []
+    },
+    {
+      "package": "typing-inspection",
+      "canonical_package": "typing-inspection",
+      "version": "0.4.4",
+      "request_url": "https://api.github.com/advisories?affects=typing-inspection%400.4.4&per_page=100",
+      "http_status": 200,
+      "matching_advisory_count": 0,
+      "matching_advisory_ids": []
+    },
+    {
+      "package": "typing_extensions",
+      "canonical_package": "typing-extensions",
+      "version": "4.16.0",
+      "request_url": "https://api.github.com/advisories?affects=typing-extensions%404.16.0&per_page=100",
+      "http_status": 200,
+      "matching_advisory_count": 0,
+      "matching_advisory_ids": []
+    }
+  ],
+  "limits": [
+    "Does not enumerate the repository private Dependabot alert list or explain aggregate repository alert totals.",
+    "Does not inspect container image packages, frontend dependencies, or the complete environment lock.",
+    "A zero exact-version advisory match is not a general security certification."
+  ]
+}

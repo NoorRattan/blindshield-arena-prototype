@@ -1,0 +1,266 @@
+{
+  "ExecutionEnvelope": {
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": "arena.execution.v1",
+        "default": "arena.execution.v1",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "status": {
+        "enum": [
+          "ACCEPTED",
+          "PENDING",
+          "RETRY_LATER",
+          "CANCEL_REQUESTED",
+          "EMBARGOED",
+          "CONTROLLED",
+          "UNAVAILABLE",
+          "ERROR"
+        ],
+        "title": "Status",
+        "type": "string"
+      },
+      "turn_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Turn Id"
+      },
+      "session_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Session Id"
+      },
+      "code": {
+        "anyOf": [
+          {
+            "enum": [
+              "INVALID_SCHEMA",
+              "UNAUTHORIZED",
+              "FORBIDDEN",
+              "NOT_FOUND",
+              "WRONG_PHASE",
+              "STALE_EPOCH",
+              "VERSION_MISMATCH",
+              "IDEMPOTENCY_CONFLICT",
+              "BODY_TOO_LARGE",
+              "RESOURCE_BUDGET_EXCEEDED",
+              "AUDIT_UNAVAILABLE",
+              "MODEL_UNAVAILABLE",
+              "POLICY_NOT_READY",
+              "DEADLINE_EXCEEDED"
+            ],
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Code"
+      },
+      "padding": {
+        "title": "Padding",
+        "type": "string"
+      }
+    },
+    "required": [
+      "status",
+      "padding"
+    ],
+    "title": "ExecutionEnvelope",
+    "type": "object"
+  },
+  "LabProfile": {
+    "additionalProperties": false,
+    "properties": {
+      "domain_id": {
+        "title": "Domain Id",
+        "type": "string"
+      },
+      "experiment_id": {
+        "title": "Experiment Id",
+        "type": "string"
+      },
+      "epoch": {
+        "maximum": 2147483647,
+        "minimum": 1,
+        "title": "Epoch",
+        "type": "integer"
+      },
+      "schema_version": {
+        "const": "arena-n06-local-mtls-profile.v1",
+        "default": "arena-n06-local-mtls-profile.v1",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "scope": {
+        "const": "LOCAL_MTLS_MEASUREMENT_POC",
+        "default": "LOCAL_MTLS_MEASUREMENT_POC",
+        "title": "Scope",
+        "type": "string"
+      },
+      "execution_lock_sha256": {
+        "maxLength": 64,
+        "minLength": 64,
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Execution Lock Sha256",
+        "type": "string"
+      },
+      "feedback_policy_sha256": {
+        "maxLength": 64,
+        "minLength": 64,
+        "pattern": "^[0-9a-f]{64}$",
+        "title": "Feedback Policy Sha256",
+        "type": "string"
+      },
+      "admission_window_ms": {
+        "default": 1000,
+        "maximum": 2000,
+        "minimum": 100,
+        "title": "Admission Window Ms",
+        "type": "integer"
+      },
+      "bind_address": {
+        "const": "127.0.0.1",
+        "default": "127.0.0.1",
+        "title": "Bind Address",
+        "type": "string"
+      },
+      "max_workers": {
+        "const": 3,
+        "default": 3,
+        "title": "Max Workers",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "domain_id",
+      "experiment_id",
+      "epoch",
+      "execution_lock_sha256",
+      "feedback_policy_sha256"
+    ],
+    "title": "LabProfile",
+    "type": "object"
+  },
+  "SignedLabProfile": {
+    "$defs": {
+      "LabProfile": {
+        "additionalProperties": false,
+        "properties": {
+          "domain_id": {
+            "title": "Domain Id",
+            "type": "string"
+          },
+          "experiment_id": {
+            "title": "Experiment Id",
+            "type": "string"
+          },
+          "epoch": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "title": "Epoch",
+            "type": "integer"
+          },
+          "schema_version": {
+            "const": "arena-n06-local-mtls-profile.v1",
+            "default": "arena-n06-local-mtls-profile.v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "scope": {
+            "const": "LOCAL_MTLS_MEASUREMENT_POC",
+            "default": "LOCAL_MTLS_MEASUREMENT_POC",
+            "title": "Scope",
+            "type": "string"
+          },
+          "execution_lock_sha256": {
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Execution Lock Sha256",
+            "type": "string"
+          },
+          "feedback_policy_sha256": {
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Feedback Policy Sha256",
+            "type": "string"
+          },
+          "admission_window_ms": {
+            "default": 1000,
+            "maximum": 2000,
+            "minimum": 100,
+            "title": "Admission Window Ms",
+            "type": "integer"
+          },
+          "bind_address": {
+            "const": "127.0.0.1",
+            "default": "127.0.0.1",
+            "title": "Bind Address",
+            "type": "string"
+          },
+          "max_workers": {
+            "const": 3,
+            "default": 3,
+            "title": "Max Workers",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "domain_id",
+          "experiment_id",
+          "epoch",
+          "execution_lock_sha256",
+          "feedback_policy_sha256"
+        ],
+        "title": "LabProfile",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "profile": {
+        "$ref": "#/$defs/LabProfile"
+      },
+      "signer_key_id": {
+        "maxLength": 128,
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*$",
+        "title": "Signer Key Id",
+        "type": "string"
+      },
+      "signature": {
+        "maxLength": 128,
+        "minLength": 128,
+        "pattern": "^[0-9a-f]{128}$",
+        "title": "Signature",
+        "type": "string"
+      }
+    },
+    "required": [
+      "profile",
+      "signer_key_id",
+      "signature"
+    ],
+    "title": "SignedLabProfile",
+    "type": "object"
+  }
+}

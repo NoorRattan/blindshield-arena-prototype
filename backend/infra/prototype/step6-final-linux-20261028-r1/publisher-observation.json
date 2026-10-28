@@ -1,0 +1,31 @@
+{
+  "schema_version": "arena-publisher-model-observation.v1",
+  "artifact_label": "OWNER-DELEGATED, SELF-ATTESTED, PROTOTYPE-SCOPE",
+  "repository": "Qwen/Qwen2.5-0.5B-Instruct-GGUF",
+  "revision": "9217f5db79a29953eb74d5343926648285ec7e67",
+  "tree_url": "https://huggingface.co/api/models/Qwen/Qwen2.5-0.5B-Instruct-GGUF/tree/9217f5db79a29953eb74d5343926648285ec7e67",
+  "model": {
+    "type": "file",
+    "oid": "a0ee18ee2bcb22c2b6c95360b292c2c40a2d7a03",
+    "size": 491400032,
+    "lfs": {
+      "oid": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+      "size": 491400032,
+      "pointerSize": 134
+    },
+    "xetHash": "0663b826e09042345d6e2069d9655cd3ae84812d8f39a5894bed7b24fc0e86cc",
+    "path": "qwen2.5-0.5b-instruct-q4_k_m.gguf"
+  },
+  "small_files": {
+    "LICENSE": {
+      "sha256": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e",
+      "bytes": 11343
+    },
+    "README.md": {
+      "sha256": "fa1fede7f775a20f111cc098c00900092020572ce78976970a5b0ad9ca211999",
+      "bytes": 4856
+    }
+  },
+  "local_model_sha256": "74a4da8c9fdbcd15bd1f6d01d621410d31c6fc00986f5eb687824e7b93d7a9db",
+  "scope": "Publisher asset identity and exact local bytes; independent training/quantization lineage is not established"
+}

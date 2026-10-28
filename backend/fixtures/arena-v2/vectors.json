@@ -1,0 +1,43 @@
+{
+  "scope": "SYNTHETIC_CONTRACT_TEST_ONLY",
+  "note": "Byte vectors are separate messages, not a complete experiment chain. All test identities/keys are public and confer no live authority.",
+  "event": {
+    "domain_id": "11111111-1111-4111-8111-111111111111",
+    "experiment_id": "22222222-2222-4222-8222-222222222222",
+    "epoch": 1,
+    "schema_version": "arena.v2",
+    "session_id": null,
+    "turn_id": null,
+    "turn_index": null,
+    "sequence": 1,
+    "previous_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+    "actor_id": "broker.test",
+    "event_type": "MANIFEST_SEALED",
+    "outcome_code": "OK",
+    "artifact_ciphertext_refs": [],
+    "public_manifest_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "utc_time": "2026-10-20T00:00:00Z",
+    "duration_us": 0
+  },
+  "event_canonical_ascii": "{\"actor_id\":\"broker.test\",\"artifact_ciphertext_refs\":[],\"domain_id\":\"11111111-1111-4111-8111-111111111111\",\"duration_us\":0,\"epoch\":1,\"event_type\":\"MANIFEST_SEALED\",\"experiment_id\":\"22222222-2222-4222-8222-222222222222\",\"outcome_code\":\"OK\",\"previous_digest\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"public_manifest_digest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"schema_version\":\"arena.v2\",\"sequence\":1,\"session_id\":null,\"turn_id\":null,\"turn_index\":null,\"utc_time\":\"2026-10-20T00:00:00Z\"}",
+  "event_digest": "f0d96d60eb00301e3806bf33f3980915ce9296615eb9208f5d4dcff1429779f4",
+  "checkpoint": {
+    "domain_id": "11111111-1111-4111-8111-111111111111",
+    "experiment_id": "22222222-2222-4222-8222-222222222222",
+    "epoch": 1,
+    "schema_version": "arena.v2",
+    "public_manifest_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "event_count": 1,
+    "final_root": "f0d96d60eb00301e3806bf33f3980915ce9296615eb9208f5d4dcff1429779f4",
+    "terminal_marker": "CLOSED",
+    "required_artifacts": [],
+    "signer_key_id": "recorder.test"
+  },
+  "checkpoint_message_hex": "6172656e612e76322f636865636b706f696e74007b22646f6d61696e5f6964223a2231313131313131312d313131312d343131312d383131312d313131313131313131313131222c2265706f6368223a312c226576656e745f636f756e74223a312c226578706572696d656e745f6964223a2232323232323232322d323232322d343232322d383232322d323232323232323232323232222c2266696e616c5f726f6f74223a2266306439366436306562303033303165333830366266333366333938303931356365393239363631356562393230386635643464636666313432393737396634222c227075626c69635f6d616e69666573745f646967657374223a2261616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161222c2272657175697265645f617274696661637473223a5b5d2c22736368656d615f76657273696f6e223a226172656e612e7632222c227369676e65725f6b65795f6964223a227265636f726465722e74657374222c227465726d696e616c5f6d61726b6572223a22434c4f534544227d",
+  "checkpoint_signature": "47ad6fc757bb618a740bd3a654d61453559bc042a2f024fc8612a64dcef147c867efebc891ccf9ae846fa2783df43caa3cd90808956e759d5f55ac5ed36c120d",
+  "test_public_key_hex": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a",
+  "rfc8032_empty_signature": "e5564300c360ac729086e2cc806e828a84877f1eb8e5d974d873e065224901555fb8821590a33bacc61e39701cf9b46bd25bf5f0595bbe24655141438e7a100b",
+  "content_hex": "73796e7468657469632070726f62653a20636166c3a90a",
+  "commitment_nonce_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+  "commitment_digest": "62c7070449870db18e36e4742f445ac3f8c37c05f22c1c3f4b37be78ddf698bb"
+}

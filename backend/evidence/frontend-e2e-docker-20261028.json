@@ -1,0 +1,39 @@
+{
+  "schema_version": "blindshield-frontend-e2e-docker.v1",
+  "run_date": "2026-10-28",
+  "source_commit": "c0625bc2dd749365b7b3226b97489bf20a8c7dac",
+  "scope": "FRONTEND_MOCKED_UI_E2E_ONLY_NO_BACKEND_INTEGRATION",
+  "package_lock_sha256": "d054446f651141faeb010db8e9a3798baddc9f60654cd590d1985740964e9940",
+  "runner": {
+    "container_image": "mcr.microsoft.com/playwright:v1.50.1-jammy",
+    "container_image_digest": "sha256:8845c40cdade98fd7a6cd32df75bfc234cd52b3278f9cd1f9fe8d6291e48ea03",
+    "docker_engine_version": "29.9.2",
+    "playwright_test_version": "1.50.1",
+    "ci": true,
+    "container_removed_after_run": true,
+    "node_modules_volume_removed_with_container": true
+  },
+  "command": ["npm ci", "npx playwright test"],
+  "result": {
+    "passed": 96,
+    "failed": 0,
+    "skipped": 0,
+    "reported_duration": "3.4m",
+    "projects": {"desktop-1440": 48, "mobile-390": 48},
+    "judge_demo_rehearsal": "PASSED",
+    "accessibility_and_role_matrix_suites": "PASSED"
+  },
+  "npm_install_audit_notice": {
+    "packages_audited": 577,
+    "critical": 0,
+    "high": 8,
+    "moderate": 1,
+    "low": 0,
+    "details_receipt": "frontend-npm-audit-20261028.json"
+  },
+  "limits": [
+    "The frontend test harness uses local mock and browser state; it did not connect to the backend or exercise real model inference.",
+    "This is supplemental UI and demo-flow validation, not one of the 35 backend T/P procedures.",
+    "No tracked frontend source or lockfile changes were made."
+  ]
+}

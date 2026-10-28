@@ -1,0 +1,19 @@
+{
+  "schema_version": "arena.prototype-recovery-authorities.v1",
+  "anchor": {
+    "authority_id": "noor-local-recovery-anchor-v1",
+    "key_id": "prototype-anchor-20261026",
+    "public_key": "6ebc6664bfc66fd0aede6875cf9a77cf469af61953492b97e8ee74e4f7253804"
+  },
+  "recovery": {
+    "authority_id": "noor-local-feedback-recovery-v1",
+    "key_id": "prototype-recovery-20261026",
+    "public_key": "bc9d27445aec51cc848beeb0e99ba28ac6d4a169791d411cdb55afc161a5dc12"
+  },
+  "invalid_export": {
+    "authority_id": "noor-local-invalid-export-v1",
+    "key_id": "prototype-invalid-export-20261026",
+    "public_key": "d5012906fc7163b6843e12faf53b5e75077fbb939934bc4c6ea2328cee5a11e2"
+  },
+  "recorder_principal_id": "n08-prototype-recorder-001"
+}

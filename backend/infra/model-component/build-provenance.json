@@ -1,0 +1,54 @@
+{
+  "schema_version": "arena-model-repeated-assembly.v1",
+  "artifact_label": "OWNER-DELEGATED, SELF-ATTESTED, PROTOTYPE-SCOPE",
+  "result": "PASS_REPEATED_PINNED_BINARY_ASSEMBLY",
+  "image_ids": [
+    "sha256:4a5a9f46dc11132862f943e0f3a0c32fa032d84bb52bd0241b7c046515f8ae68",
+    "sha256:4a5a9f46dc11132862f943e0f3a0c32fa032d84bb52bd0241b7c046515f8ae68"
+  ],
+  "builds": [
+    {
+      "schema_version": "arena-model-build.v1",
+      "network": "none",
+      "automatic_pulls": false,
+      "image_id": "sha256:4a5a9f46dc11132862f943e0f3a0c32fa032d84bb52bd0241b7c046515f8ae68",
+      "base_image": "ghcr.io/ggml-org/llama.cpp@sha256:9fbaa06d7f4449e2ae0d02b40e0431f7c212dcf231c9e3a7777a6afc2cc8f312",
+      "dockerfile_sha256": "1966c77ea001602ed183057105ec95ca80698f0e6297adbd0046b7221cca7ac1",
+      "rootfs_layers": [
+        "sha256:32ab39660fd51c6dc3aae486b42d42bbe8fe4c1db78eaf57bb9c21198de48a16",
+        "sha256:74bdd36ece50cf3c0c38b899a92f67f16fe49e2e52045dc6ff4432fefcecd45d",
+        "sha256:7ba56fe5cdc0a3dcf207021da88ffd9a3516a182a08565a15d44634fc1ac9e26",
+        "sha256:5426b6d37dad1cb9e1d50514c886e5bc9553c784dd9922468eceaa1d9ac2d205",
+        "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+      ],
+      "runtime_downloads": false,
+      "source_date_epoch": "1792470811",
+      "default_timestamped_attestation": false,
+      "scope": "Reproducible assembly from a pinned publisher binary image; not an independent source compilation"
+    },
+    {
+      "schema_version": "arena-model-build.v1",
+      "network": "none",
+      "automatic_pulls": false,
+      "image_id": "sha256:4a5a9f46dc11132862f943e0f3a0c32fa032d84bb52bd0241b7c046515f8ae68",
+      "base_image": "ghcr.io/ggml-org/llama.cpp@sha256:9fbaa06d7f4449e2ae0d02b40e0431f7c212dcf231c9e3a7777a6afc2cc8f312",
+      "dockerfile_sha256": "1966c77ea001602ed183057105ec95ca80698f0e6297adbd0046b7221cca7ac1",
+      "rootfs_layers": [
+        "sha256:32ab39660fd51c6dc3aae486b42d42bbe8fe4c1db78eaf57bb9c21198de48a16",
+        "sha256:74bdd36ece50cf3c0c38b899a92f67f16fe49e2e52045dc6ff4432fefcecd45d",
+        "sha256:7ba56fe5cdc0a3dcf207021da88ffd9a3516a182a08565a15d44634fc1ac9e26",
+        "sha256:5426b6d37dad1cb9e1d50514c886e5bc9553c784dd9922468eceaa1d9ac2d205",
+        "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+      ],
+      "runtime_downloads": false,
+      "source_date_epoch": "1792470811",
+      "default_timestamped_attestation": false,
+      "scope": "Reproducible assembly from a pinned publisher binary image; not an independent source compilation"
+    }
+  ],
+  "scope": "Local metadata assembly from exact publisher image; no independent compilation/training/quantization claim",
+  "retained_attempts": [
+    "Initial default timestamped build attestations produced different image IDs; retained privately. Fixed timestamped assembly produced equal IDs.",
+    "A final smoke attempt refused below the unchanged 8 GiB host-available floor. Retried after unrelated browser exit restored capacity; threshold was not lowered."
+  ]
+}

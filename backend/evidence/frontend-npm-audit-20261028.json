@@ -1,0 +1,336 @@
+{
+  "command": "npm audit --package-lock-only --json",
+  "counts": {
+    "moderate": 1,
+    "low": 0,
+    "info": 0,
+    "high": 8,
+    "total": 9,
+    "critical": 0
+  },
+  "status": "VULNERABILITIES_FOUND",
+  "registry": "https://registry.npmjs.org/",
+  "lock_sha256": "d054446f651141faeb010db8e9a3798baddc9f60654cd590d1985740964e9940",
+  "lock_file": "frontend/package-lock.json",
+  "checked_at_utc": "2026-10-28T07:42:19Z",
+  "tool_version": "11.17.0",
+  "schema_version": "blindshield-frontend-npm-audit.v1",
+  "exit_code": 1,
+  "limits": [
+    "Lockfile-only advisory audit; it does not establish runtime reachability or exploitability.",
+    "Does not enumerate GitHub Dependabot alerts or other manifests/images.",
+    "No frontend files were modified; frontend remains outside the active backend workstream."
+  ],
+  "tool": "npm",
+  "findings": [
+    {
+      "package": "@playwright/test",
+      "direct": true,
+      "via": [
+        {
+          "name": "playwright"
+        }
+      ],
+      "fix_available": {
+        "name": "@playwright/test",
+        "version": "1.64.1",
+        "isSemVerMajor": false
+      },
+      "severity": "high",
+      "affected_range": "0.9.7 - 0.1112.0-alpha2 || 1.38.0-alpha-1692262648000 - 1.55.1-beta-1758616458000"
+    },
+    {
+      "package": "@remix-run/router",
+      "direct": false,
+      "via": [
+        {
+          "title": "React Router vulnerable to XSS via Open Redirects",
+          "range": "<=1.23.1",
+          "name": "@remix-run/router",
+          "severity": "high",
+          "url": "https://github.com/advisories/GHSA-2w69-qvjg-hvjx",
+          "source": 1112052
+        },
+        {
+          "title": "React Router's same-origin redirect with path starting // causes open redirect via protocol-relative URL reinterpretation",
+          "range": ">=1.3.0 <1.23.3",
+          "name": "@remix-run/router",
+          "severity": "moderate",
+          "url": "https://github.com/advisories/GHSA-2j2x-hqr9-3h42",
+          "source": 1136293
+        }
+      ],
+      "fix_available": {
+        "name": "react-router-dom",
+        "version": "6.30.6",
+        "isSemVerMajor": false
+      },
+      "severity": "high",
+      "affected_range": "<=1.23.2"
+    },
+    {
+      "package": "playwright",
+      "direct": false,
+      "via": [
+        {
+          "title": "Playwright downloads and installs browsers without verifying the authenticity of the SSL certificate",
+          "range": "<1.55.1",
+          "name": "playwright",
+          "severity": "high",
+          "url": "https://github.com/advisories/GHSA-7mvr-c777-76hp",
+          "source": 1109208
+        }
+      ],
+      "fix_available": {
+        "name": "@playwright/test",
+        "version": "1.64.1",
+        "isSemVerMajor": false
+      },
+      "severity": "high",
+      "affected_range": "<1.55.1"
+    },
+    {
+      "package": "postcss",
+      "direct": true,
+      "via": [
+        {
+          "title": "PostCSS has XSS via Unescaped </style> in its CSS Stringify Output",
+          "range": "<8.5.10",
+          "name": "postcss",
+          "severity": "moderate",
+          "url": "https://github.com/advisories/GHSA-qx2v-qp2m-jg93",
+          "source": 1117015
+        },
+        {
+          "title": "PostCSS: Arbitrary file read and information disclosure via attacker-controlled sourceMappingURL in CSS comments",
+          "range": "<=8.5.11",
+          "name": "postcss",
+          "severity": "high",
+          "url": "https://github.com/advisories/GHSA-6g55-p6wh-862q",
+          "source": 1124252
+        },
+        {
+          "title": "PostCSS: incomplete fix of GHSA-6g55-p6wh-862q — attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset",
+          "range": "<=8.5.22",
+          "name": "postcss",
+          "severity": "moderate",
+          "url": "https://github.com/advisories/GHSA-fxqj-rqcc-2cmp",
+          "source": 1130709
+        },
+        {
+          "title": "PostCSS: Path Traversal in Previous Source Map Auto-Loading (sourceMappingURL) leads to Arbitrary .map File Disclosure",
+          "range": "<=8.5.17",
+          "name": "postcss",
+          "severity": "high",
+          "url": "https://github.com/advisories/GHSA-r28c-9q8g-f849",
+          "source": 1139510
+        }
+      ],
+      "fix_available": {
+        "name": "postcss",
+        "version": "8.5.32",
+        "isSemVerMajor": false
+      },
+      "severity": "high",
+      "affected_range": "<=8.5.22"
+    },
+    {
+      "package": "postcss-selector-parser",
+      "direct": false,
+      "via": [
+        {
+          "title": "PostCSS: Quadratic complexity in flat selector parsing allows CPU exhaustion",
+          "range": "<6.1.5",
+          "name": "postcss-selector-parser",
+          "severity": "moderate",
+          "url": "https://github.com/advisories/GHSA-rj75-hqrm-r3gf",
+          "source": 1243379
+        }
+      ],
+      "fix_available": true,
+      "severity": "moderate",
+      "affected_range": "<6.1.5"
+    },
+    {
+      "package": "react-router",
+      "direct": false,
+      "via": [
+        {
+          "name": "@remix-run/router"
+        },
+        {
+          "title": "React Router has unexpected external redirect via untrusted paths",
+          "range": ">=6.0.0 <6.30.2",
+          "name": "react-router",
+          "severity": "moderate",
+          "url": "https://github.com/advisories/GHSA-9jcx-v3wj-wh4m",
+          "source": 1112057
+        },
+        {
+          "title": "React Router: Open redirect via backslash in <Link> and useNavigate (CVE-2025-68470 bypass)",
+          "range": ">=6.0.0 <7.18.0",
+          "name": "react-router",
+          "severity": "moderate",
+          "url": "https://github.com/advisories/GHSA-wrjc-x8rr-h8h6",
+          "source": 1124268
+        },
+        {
+          "title": "React Router: Arbitrary Constructor Injection via deserializeErrors() in React Router SSR Hydration",
+          "range": ">=6.4.0 <7.18.0",
+          "name": "react-router",
+          "severity": "moderate",
+          "url": "https://github.com/advisories/GHSA-337j-9hxr-rhxg",
+          "source": 1124272
+        },
+        {
+          "title": "React Router's same-origin redirect with path starting // causes open redirect via protocol-relative URL reinterpretation",
+          "range": ">=6.7.0 <6.30.4",
+          "name": "react-router",
+          "severity": "moderate",
+          "url": "https://github.com/advisories/GHSA-2j2x-hqr9-3h42",
+          "source": 1136303
+        }
+      ],
+      "fix_available": {
+        "name": "react-router-dom",
+        "version": "6.30.6",
+        "isSemVerMajor": false
+      },
+      "severity": "high",
+      "affected_range": "6.0.0 - 7.17.0"
+    },
+    {
+      "package": "react-router-dom",
+      "direct": true,
+      "via": [
+        {
+          "name": "@remix-run/router"
+        },
+        {
+          "name": "react-router"
+        }
+      ],
+      "fix_available": {
+        "name": "react-router-dom",
+        "version": "6.30.6",
+        "isSemVerMajor": false
+      },
+      "severity": "high",
+      "affected_range": "6.0.0-alpha.0 - 6.30.2"
+    },
+    {
+      "package": "vite",
+      "direct": true,
+      "via": [
+        {
+          "title": "vite allows server.fs.deny bypass via backslash on Windows",
+          "range": ">=6.0.0 <=6.4.0",
+          "name": "vite",
+          "severity": "moderate",
+          "url": "https://github.com/advisories/GHSA-93m4-6634-74q7",
+          "source": 1109135
+        },
+        {
+          "title": "Vite Vulnerable to Path Traversal in Optimized Deps `.map` Handling",
+          "range": "<=6.4.1",
+          "name": "vite",
+          "severity": "moderate",
+          "url": "https://github.com/advisories/GHSA-4w7w-66w2-5vf9",
+          "source": 1116229
+        },
+        {
+          "title": "Vite Vulnerable to Arbitrary File Read via Vite Dev Server WebSocket",
+          "range": ">=6.0.0 <=6.4.1",
+          "name": "vite",
+          "severity": "high",
+          "url": "https://github.com/advisories/GHSA-p9ff-h696-f583",
+          "source": 1116234
+        },
+        {
+          "title": "launch-editor: NTLMv2 hash disclosure via UNC path handling on Windows",
+          "range": "<=6.4.2",
+          "name": "vite",
+          "severity": "moderate",
+          "url": "https://github.com/advisories/GHSA-v6wh-96g9-6wx3",
+          "source": 1120784
+        },
+        {
+          "title": "launch-editor: escapeCmdArgs() omits % escaping on Windows",
+          "range": "<=6.4.3",
+          "name": "vite",
+          "severity": "moderate",
+          "url": "https://github.com/advisories/GHSA-698v-4r3x-3vcv",
+          "source": 1242622
+        },
+        {
+          "title": "launch-editor: Editor CLI flag misinterpretation causing arbitrary command execution for some editors",
+          "range": "<=6.4.3",
+          "name": "vite",
+          "severity": "moderate",
+          "url": "https://github.com/advisories/GHSA-r825-w8mm-5pxw",
+          "source": 1242651
+        },
+        {
+          "title": "launch-editor: `fs.existsSync()` existence check can be bypassed on Windows",
+          "range": "<=6.4.3",
+          "name": "vite",
+          "severity": "high",
+          "url": "https://github.com/advisories/GHSA-587h-7wmj-h5pm",
+          "source": 1242658
+        },
+        {
+          "title": "Vite: Cross origin script execution through Vite custom middleware",
+          "range": "<=6.4.3",
+          "name": "vite",
+          "severity": "low",
+          "url": "https://github.com/advisories/GHSA-9jrq-w75r-8gcw",
+          "source": 1242724
+        },
+        {
+          "title": "Vite: Files outside `server.fs.allow` could be served when project paths match system paths on non-Windows machine",
+          "range": "<=6.4.3",
+          "name": "vite",
+          "severity": "moderate",
+          "url": "https://github.com/advisories/GHSA-rq7h-c2jc-7f22",
+          "source": 1242730
+        },
+        {
+          "title": "vite: `server.fs.deny` bypass on Windows alternate paths",
+          "range": "<=6.4.2",
+          "name": "vite",
+          "severity": "moderate",
+          "url": "https://github.com/advisories/GHSA-fx2h-pf6j-xcff",
+          "source": 1243432
+        }
+      ],
+      "fix_available": {
+        "name": "vite",
+        "version": "6.4.5",
+        "isSemVerMajor": false
+      },
+      "severity": "high",
+      "affected_range": "<=6.4.3"
+    },
+    {
+      "package": "zod",
+      "direct": true,
+      "via": [
+        {
+          "title": "Zod can exhaust memory while validating oversized constrained collections",
+          "range": "<4.6.6",
+          "name": "zod",
+          "severity": "high",
+          "url": "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+          "source": 1243066
+        }
+      ],
+      "fix_available": {
+        "name": "zod",
+        "version": "4.6.7",
+        "isSemVerMajor": true
+      },
+      "severity": "high",
+      "affected_range": "<4.6.6"
+    }
+  ]
+}

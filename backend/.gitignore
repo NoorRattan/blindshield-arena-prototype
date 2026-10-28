@@ -1,0 +1,10 @@
+# Backend-local generated state and secrets; never publish these directories.
+.venv/
+artifacts/
+state/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.env
+.env.*

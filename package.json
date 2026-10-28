@@ -1,0 +1,14 @@
+{
+  "name": "blindshield-arena-root",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "preview": "npm --prefix frontend run preview",
+    "typecheck": "npm --prefix frontend run typecheck",
+    "lint": "npm --prefix frontend run lint",
+    "test": "npm --prefix frontend run test",
+    "e2e:smoke": "npm --prefix frontend run e2e:smoke",
+    "verify": "npm --prefix frontend run verify"
+  }
+}

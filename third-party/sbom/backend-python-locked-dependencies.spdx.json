@@ -1,0 +1,390 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "BlindShield Arena backend Python locked dependency license inventory",
+  "documentNamespace": "https://spdx.org/spdxdocs/blindshield-backend-python-lock-0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678",
+  "creationInfo": {
+    "created": "2026-10-28T07:02:38Z",
+    "creators": [
+      "Tool: blindshield-backend-python-license-inventory/1.0"
+    ],
+    "comment": "Derived from backend/requirements.lock SHA-256 0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678. This is a package identity and declared-license inventory only. requirements.lock has no artifact hashes; no claim is made about the exact wheel or source archive installed."
+  },
+  "packages": [
+    {
+      "name": "annotated-types",
+      "SPDXID": "SPDXRef-Package-74507c740d3c02d9",
+      "versionInfo": "0.8.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:pypi/annotated-types@0.8.0"
+        }
+      ],
+      "sourceInfo": "Pinned in backend/requirements.lock (SHA-256 0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678); declared license source: License-Expression field in exact-version installed .dist-info/METADATA. Artifact file and digest are not bound by this lock. Upstream source: https://github.com/annotated-types/annotated-types.",
+      "homepage": "https://github.com/annotated-types/annotated-types"
+    },
+    {
+      "name": "cffi",
+      "SPDXID": "SPDXRef-Package-0166f3a44aa21263",
+      "versionInfo": "2.1.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MIT-0",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:pypi/cffi@2.1.1"
+        }
+      ],
+      "sourceInfo": "Pinned in backend/requirements.lock (SHA-256 0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678); declared license source: License-Expression field in exact-version installed .dist-info/METADATA. Artifact file and digest are not bound by this lock."
+    },
+    {
+      "name": "colorama",
+      "SPDXID": "SPDXRef-Package-a25048c39a19d846",
+      "versionInfo": "0.4.6",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:pypi/colorama@0.4.6"
+        }
+      ],
+      "sourceInfo": "Pinned in backend/requirements.lock (SHA-256 0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678); declared license source: License text in installed colorama-0.4.6.dist-info/licenses/LICENSE.txt. Artifact file and digest are not bound by this lock.",
+      "homepage": "https://github.com/tartley/colorama"
+    },
+    {
+      "name": "cryptography",
+      "SPDXID": "SPDXRef-Package-ee6b926e4d0545ee",
+      "versionInfo": "50.0.2",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "Apache-2.0 OR BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:pypi/cryptography@50.0.2"
+        }
+      ],
+      "sourceInfo": "Pinned in backend/requirements.lock (SHA-256 0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678); declared license source: License-Expression field in exact-version installed .dist-info/METADATA. Artifact file and digest are not bound by this lock. Upstream source: https://github.com/pyca/cryptography/.",
+      "homepage": "https://github.com/pyca/cryptography"
+    },
+    {
+      "name": "iniconfig",
+      "SPDXID": "SPDXRef-Package-9ffafe57a61437c8",
+      "versionInfo": "2.3.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:pypi/iniconfig@2.3.1"
+        }
+      ],
+      "sourceInfo": "Pinned in backend/requirements.lock (SHA-256 0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678); declared license source: License-Expression field in exact-version installed .dist-info/METADATA. Artifact file and digest are not bound by this lock.",
+      "homepage": "https://github.com/pytest-dev/iniconfig"
+    },
+    {
+      "name": "packaging",
+      "SPDXID": "SPDXRef-Package-ea373121703506d4",
+      "versionInfo": "26.3",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "Apache-2.0 OR BSD-2-Clause",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:pypi/packaging@26.3"
+        }
+      ],
+      "sourceInfo": "Pinned in backend/requirements.lock (SHA-256 0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678); declared license source: License-Expression field in exact-version installed .dist-info/METADATA. Artifact file and digest are not bound by this lock. Upstream source: https://github.com/pypa/packaging."
+    },
+    {
+      "name": "pluggy",
+      "SPDXID": "SPDXRef-Package-c697bbe2abd1791e",
+      "versionInfo": "1.7.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:pypi/pluggy@1.7.0"
+        }
+      ],
+      "sourceInfo": "Pinned in backend/requirements.lock (SHA-256 0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678); declared license source: License field and license text in installed pluggy-1.7.0.dist-info metadata. Artifact file and digest are not bound by this lock. Upstream source: https://github.com/pytest-dev/pluggy.",
+      "homepage": "https://github.com/pytest-dev/pluggy"
+    },
+    {
+      "name": "pycparser",
+      "SPDXID": "SPDXRef-Package-2bfebabbf7ba45d0",
+      "versionInfo": "3.11",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BSD-3-Clause",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:pypi/pycparser@3.11"
+        }
+      ],
+      "sourceInfo": "Pinned in backend/requirements.lock (SHA-256 0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678); declared license source: License-Expression field in exact-version installed .dist-info/METADATA. Artifact file and digest are not bound by this lock.",
+      "homepage": "https://github.com/eliben/pycparser"
+    },
+    {
+      "name": "pydantic",
+      "SPDXID": "SPDXRef-Package-61406a8534f02280",
+      "versionInfo": "2.14.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:pypi/pydantic@2.14.1"
+        }
+      ],
+      "sourceInfo": "Pinned in backend/requirements.lock (SHA-256 0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678); declared license source: License-Expression field in exact-version installed .dist-info/METADATA. Artifact file and digest are not bound by this lock. Upstream source: https://github.com/pydantic/pydantic.",
+      "homepage": "https://github.com/pydantic/pydantic"
+    },
+    {
+      "name": "pydantic_core",
+      "SPDXID": "SPDXRef-Package-a90235185d932d4d",
+      "versionInfo": "2.50.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:pypi/pydantic-core@2.50.1"
+        }
+      ],
+      "sourceInfo": "Pinned in backend/requirements.lock (SHA-256 0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678); declared license source: License-Expression field in exact-version installed .dist-info/METADATA. Artifact file and digest are not bound by this lock. Upstream source: https://github.com/pydantic/pydantic/tree/main/pydantic-core.",
+      "homepage": "https://github.com/pydantic/pydantic"
+    },
+    {
+      "name": "Pygments",
+      "SPDXID": "SPDXRef-Package-d9dc40c65f9782e4",
+      "versionInfo": "2.21.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "BSD-2-Clause",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:pypi/pygments@2.21.0"
+        }
+      ],
+      "sourceInfo": "Pinned in backend/requirements.lock (SHA-256 0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678); declared license source: License-Expression field in exact-version installed .dist-info/METADATA. Artifact file and digest are not bound by this lock. Upstream source: https://github.com/pygments/pygments.",
+      "homepage": "https://pygments.org"
+    },
+    {
+      "name": "pytest",
+      "SPDXID": "SPDXRef-Package-a874376bdd4afeff",
+      "versionInfo": "9.1.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:pypi/pytest@9.1.1"
+        }
+      ],
+      "sourceInfo": "Pinned in backend/requirements.lock (SHA-256 0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678); declared license source: License-Expression field in exact-version installed .dist-info/METADATA. Artifact file and digest are not bound by this lock. Upstream source: https://github.com/pytest-dev/pytest.",
+      "homepage": "https://docs.pytest.org/en/latest/"
+    },
+    {
+      "name": "setuptools",
+      "SPDXID": "SPDXRef-Package-9ba430516310ef00",
+      "versionInfo": "84.2.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:pypi/setuptools@84.2.0"
+        }
+      ],
+      "sourceInfo": "Pinned in backend/requirements.lock (SHA-256 0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678); declared license source: License-Expression field in exact-version installed .dist-info/METADATA. Artifact file and digest are not bound by this lock. Upstream source: https://github.com/pypa/setuptools."
+    },
+    {
+      "name": "typing-inspection",
+      "SPDXID": "SPDXRef-Package-b9eae69b7237324b",
+      "versionInfo": "0.4.4",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:pypi/typing-inspection@0.4.4"
+        }
+      ],
+      "sourceInfo": "Pinned in backend/requirements.lock (SHA-256 0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678); declared license source: License-Expression field in exact-version installed .dist-info/METADATA. Artifact file and digest are not bound by this lock. Upstream source: https://github.com/pydantic/typing-inspection.",
+      "homepage": "https://github.com/pydantic/typing-inspection"
+    },
+    {
+      "name": "typing_extensions",
+      "SPDXID": "SPDXRef-Package-b6fc9ed39ecf8f59",
+      "versionInfo": "4.16.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "PSF-2.0",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:pypi/typing-extensions@4.16.0"
+        }
+      ],
+      "sourceInfo": "Pinned in backend/requirements.lock (SHA-256 0e6b8c7b39b814bb4a5395e66d7de69fc635439a048db832465d29c310659678); declared license source: License-Expression field in exact-version installed .dist-info/METADATA. Artifact file and digest are not bound by this lock. Upstream source: https://github.com/python/typing_extensions.",
+      "homepage": "https://github.com/python/typing_extensions"
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-74507c740d3c02d9"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-0166f3a44aa21263"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-a25048c39a19d846"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-ee6b926e4d0545ee"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-9ffafe57a61437c8"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-ea373121703506d4"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-c697bbe2abd1791e"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-2bfebabbf7ba45d0"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-61406a8534f02280"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-a90235185d932d4d"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-d9dc40c65f9782e4"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-a874376bdd4afeff"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-9ba430516310ef00"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-b9eae69b7237324b"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-b6fc9ed39ecf8f59"
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+* text=auto
+*.md text eol=lf
+*.json text eol=lf
+*.py text eol=lf
+*.csv text eol=lf
+/.gitignore text eol=lf
+/.gitattributes text eol=lf
+/backend/pyproject.toml text eol=lf
+/backend/requirements.lock text eol=lf
+/backend/src/.gitignore text eol=lf
+/backend/.gitignore text eol=lf
+# These two historical sources were inspected with CRLF bytes.
+"/memory files/03-playbook-registry.csv" text eol=crlf
+"/memory files/04-document-verification.md" text eol=crlf
+
+/backend/evidence/source-snapshots/*.txt -text
+/backend/infra/cells/Dockerfile.defense text eol=lf
+/backend/infra/cells/Dockerfile.model text eol=lf
+/frontend/src/test/setup.ts text eol=lf
+# Preserve exact subprocess/summary bytes referenced by published N04 receipts.
+"/memory files/hackathon/evidence/n04-*.log" -text
+"/memory files/hackathon/evidence/n04-*.json" -text
+# Preserve exact subprocess/summary bytes referenced by N05 receipts, including failed attempts.
+"/memory files/hackathon/evidence/n05-*.log" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+"/memory files/hackathon/evidence/n05-*.json" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# N06A command/receipt bytes are evidence; preserve their original line endings.
+"/memory files/hackathon/evidence/n06-*.log" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+"/memory files/hackathon/evidence/n06-*.json" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Raw retained tracebacks keep their original trailing spaces and exact hashes.
+"/memory files/hackathon/evidence/n06-worker-attempt-*.log" -text -whitespace
+"/memory files/hackathon/evidence/n06-transport-attempt-*.log" -text -whitespace
+"/memory files/hackathon/evidence/n06-transport-*.txt" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+"/memory files/hackathon/evidence/monu-component-review-2026-10-20.log" text eol=lf
+
+# N06C exact observation/key bytes and retained raw failure tracebacks.
+"/memory files/hackathon/evidence/n06-calibration-*.txt" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+"/memory files/hackathon/evidence/n06-calibration-*.jsonl" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+"/memory files/hackathon/evidence/n06-calibration-attempt-*.log" -text -whitespace
+
+# Preserve the exact generated local schema bytes measured by the N06C receipt.
+/backend/contracts/n06-sealed-transport.schema.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# N06 local acceptance publishes exact observation/public-trust bytes.
+"/memory files/hackathon/evidence/n06-completion-*.txt" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+"/memory files/hackathon/evidence/n06-completion-*.jsonl" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+"/memory files/hackathon/evidence/n06-completion-attempt-*.log" -text -whitespace
+
+# N07 review receipts retain exact subprocess and observation bytes.
+"/memory files/hackathon/evidence/n07-*.log" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+"/memory files/hackathon/evidence/n07-*.json" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# MEM-034 real-model comparison receipts and logs are hash-bound public evidence.
+"/memory files/hackathon/evidence/n07b-p013-real-serial-concurrent-2026-10-24-mem034-*.log" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+"/memory files/hackathon/evidence/n07b-p013-real-serial-concurrent-2026-10-24-mem034-*.json" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# MEM-035 synthetic-control receipts/logs are byte-hash-bound evidence.
+"/memory files/hackathon/evidence/n07b-p013-synthetic-control-serial-concurrent-2026-10-25-mem035-*.log" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+"/memory files/hackathon/evidence/n07b-p013-synthetic-control-serial-concurrent-2026-10-25-mem035-*.json" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# MEM-038 I/O feasibility logs are hash-bound evidence; preserve their bytes.
+"/memory files/hackathon/evidence/n07b-io-pressure-feasibility-2026-10-25-mem038-*.log" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# MEM-039 residual-risk checker outputs retain exact process bytes and hashes.
+"/memory files/hackathon/evidence/n07b-residual-risk-mapping-2026-10-25-mem039-*.log" -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# MEM-040 N08 readiness rechecks preserve their recorded evidence bytes.
+"/memory files/hackathon/evidence/n08-readiness-*-2026-10-25-mem040*.log" -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,-cr-at-eol
+"/memory files/hackathon/evidence/n08-readiness-mem034-offline-reverification-2026-10-25.log" -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,-cr-at-eol
+
+# MEM-041 N05 baseline observations are hash-bound; preserve exact log bytes.
+"/memory files/hackathon/evidence/n08-fresh-n05-baseline-*-mem041*.log" -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,-cr-at-eol
+
+# MEM-042 passive runtime inventory logs are exact observation/check output bytes.
+"/memory files/hackathon/evidence/n08-passive-runtime-environment-lock-inventory-*-mem042*.log" -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,-cr-at-eol
+
+# MEM-043 exact build/admission review receipts and logs are hash-bound evidence.
+"/memory files/hackathon/evidence/n08-exact-build-admission-gate-review-*-2026-10-25-mem043*.log" -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,-cr-at-eol
+"/memory files/hackathon/evidence/n08-exact-build-admission-gate-review-*-2026-10-25-mem043*.json" -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,-cr-at-eol
+
+# MEM-046 gate-input inventory logs are byte-hash-bound evidence.
+"/memory files/hackathon/evidence/n08-gate-input-inventory-post-memory-check-2026-10-26-mem046.log" -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,-cr-at-eol
+"/memory files/hackathon/evidence/n08-gate-input-inventory-runtime-2026-10-26-mem046.log" -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,-cr-at-eol
+
+# MEM-046 indexes the exact Windows working bytes of the published MEM-045 JSON evidence.
+"/memory files/hackathon/evidence/n08-exact-build-admission-gate-review-2026-10-25-mem045-receipt.json" text eol=crlf
+"/memory files/hackathon/evidence/n08-exact-build-admission-gate-review-2026-10-25-mem045-outputs.json" text eol=crlf
+
+# MEM-044 N05 candidate reconciliation receipts and process outputs are hash-bound evidence.
+"/memory files/hackathon/evidence/n08-n05-candidate-reconciliation-*-2026-10-25-mem044*.log" -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,-cr-at-eol
+"/memory files/hackathon/evidence/n08-n05-candidate-reconciliation-*-2026-10-25-mem044*.json" -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,-cr-at-eol
+
+# Acceptance receipts and outputs are bound to exact local execution bytes.
+"/memory files/hackathon/evidence/acceptance-*.json" -text
+"/memory files/hackathon/evidence/acceptance-*.log" -text
+"/backend/evidence/acceptance-*.json" -text
+"/backend/evidence/acceptance-*.log" -text
+
+# Evidence and owner-delegated public key material must retain exact bytes.
+"/memory files/hackathon/evidence/**" -text
+"/backend/evidence/**" -text
+"/backend/infra/owner-delegated-n08/*.pem" -text
+
+# Selected profiles and retained owner inputs are bound to exact receipt bytes.
+/backend/infra/model-component/** -text whitespace=cr-at-eol
+/backend/infra/owner-delegated-n08/** -text whitespace=cr-at-eol
+
+# New subprocess evidence keeps native CRLF; traceback indentation remains exact.
+"/memory files/hackathon/evidence/step12-*.log" -text -whitespace
+"/memory files/hackathon/evidence/*mem055*.log" -text -whitespace
+
+"/memory files/hackathon/evidence/model-component-step2-2026-10-26.json" -text whitespace=cr-at-eol
+
+# Staged prototype profiles/grants and native process outputs retain exact evidence bytes.
+/backend/infra/prototype/** -text whitespace=cr-at-eol
+"/memory files/hackathon/evidence/step34-*.log" -text -whitespace
+
+# This exact historical test snapshot includes its original blank final line.
+/backend/evidence/source-snapshots/2bde7c6bd3ea6e72f0f3ae8c19366d249f761f341536a1d2e5cf821c22c1e642.txt -whitespace
+
+# Step 5 receipts and native subprocess logs are exact hash-bound evidence.
+"/memory files/hackathon/evidence/step5-recovery-20261027-final/**" -text -whitespace
+
+# New current-source recovery and Step 6 logs retain exact native bytes.
+"/memory files/hackathon/evidence/step6-startup-recovery-20261027/**" -text -whitespace

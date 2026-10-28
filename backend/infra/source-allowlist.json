@@ -1,0 +1,31 @@
+{
+  "schema": "arena-preparation-sources.v1",
+  "status": "DRAFT_NO_ACQUISITION_IMPLEMENTED",
+  "downloads_enabled": false,
+  "runtime_egress_allowed": false,
+  "approved_execution_images": [],
+  "candidates": [
+    {
+      "purpose": "local inference source candidate",
+      "repository": "https://github.com/ggml-org/llama.cpp",
+      "revision": null,
+      "artifact_sha256": null,
+      "runtime_admitted": false
+    },
+    {
+      "purpose": "provisional model candidate",
+      "repository": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct",
+      "revision": null,
+      "artifact_sha256": null,
+      "runtime_admitted": false
+    },
+    {
+      "purpose": "previously prepared public dataset source",
+      "repository": "https://huggingface.co/datasets/JailbreakBench/JBB-Behaviors",
+      "revision": "886acc352a31533ffbcf4ef22c744658688086fc",
+      "preparation_receipt": null,
+      "runtime_admitted": false
+    }
+  ],
+  "admission_rule": "No implicit wildcard hosts, redirects or runtime downloads. Actual files, revisions, checksums, rights and trusted approvals must be locked by the future preparation path; this catalog grants no execution authority."
+}

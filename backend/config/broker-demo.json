@@ -1,0 +1,24 @@
+{
+  "schema_version": "arena-broker-config.v1",
+  "profiles": [{
+    "domain_id": "00000000-0000-4000-8000-000000000001",
+    "request": {
+      "profile_id": "local-control-only-v1",
+      "model_version_id": "UNADMITTED_MODEL",
+      "defense_version_id": "UNADMITTED_DEFENSE",
+      "rubric_version_id": "UNADMITTED_RUBRIC",
+      "disclosure_profile_id": "UNADMITTED_DISCLOSURE",
+      "interaction_mode": "INTERACTIVE",
+      "defense_mode": "INPUT",
+      "dataset_catalog_id": "UNADMITTED_DATASET",
+      "strategy_version_id": "UNADMITTED_STRATEGY",
+      "budget_profile_id": "local-control-budget-v1"
+    },
+    "red_subject_id": "red",
+    "blue_subject_id": "blue",
+    "auditor_subject_ids": ["auditor"],
+    "query_budget": 500,
+    "session_limit": 3,
+    "domain_queue_limit": 4
+  }]
+}
