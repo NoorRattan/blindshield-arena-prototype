@@ -22,13 +22,6 @@ import {
   AttackReceiptSchema,
   CheckpointSchema,
   CreateExperimentResponseSchema,
-  DefenseArtifactInfoSchema,
-  EvidenceBundleMetadataSchema,
-  ExperimentStatusSchema,
-  FeedbackItemSchema,
-  ManifestSchema,
-  PreflightReportSchema,
-  ReleasedEpochForensicsSchema,
 } from '../schemas';
 import { useArenaStore } from '../../state/useArenaStore';
 
@@ -104,9 +97,8 @@ export interface AttackBatchRequest {
  * Versioned; must include the exact owned turn/idempotency key.
  */
 export interface FeedbackRecoveryRequest {
-  epoch: number;
   turn_id: string;
-  original_client_key: string;
+  idempotency_key: string;
 }
 
 /**
@@ -188,6 +180,42 @@ export interface LiveClientConfig {
   baseUrl?: string;
 }
 
+function backendRole(role: Role): string {
+  return role === 'blue' ? 'blue' : role;
+}
+
+function unsupportedLiveFeature(feature: string): never {
+  const error = new Error(`${feature} is not exposed by the current prototype HTTP API.`) as Error & { code: string };
+  error.code = 'LIVE_FEATURE_UNAVAILABLE';
+  throw error;
+}
+
+export interface BackendExperimentStatus {
+  domain_id: string;
+  experiment_id: string;
+  epoch: number;
+  phase: LifecycleState;
+  integrity: string;
+}
+
+export interface BackendExperimentCreated {
+  domain_id: string;
+  experiment_id: string;
+  epoch: number;
+  phase: 'CREATED';
+}
+
+export type BackendLifecycleAction = 'seal' | 'start' | 'finish' | 'close' | 'release';
+
+export interface BackendExecutionEnvelope {
+  schema_version: string;
+  status: string;
+  turn_id?: string | null;
+  session_id?: string | null;
+  code?: string | null;
+  padding?: string;
+}
+
 /**
  * LiveArenaClient: Real HTTP client for authenticating with the BlindShield Arena backend broker.
  * Implements real network transport, mTLS client credentials, fail-closed handling,
@@ -218,22 +246,6 @@ export class LiveArenaClient implements ArenaClient {
     }
   }
 
-  private getAuthHeaders(role?: Role): Record<string, string> {
-    const activeRole = this.resolveRole(role);
-    const headers: Record<string, string> = {
-      'x-arena-role': activeRole,
-    };
-    try {
-      const principal = useArenaStore.getState().authenticatedPrincipal;
-      if (principal?.certFingerprint) {
-        headers['x-client-cert-sha256'] = principal.certFingerprint;
-      }
-    } catch {
-      // ignore
-    }
-    return headers;
-  }
-
   /**
    * Safe fetch with duplicate-key JSON detection, Idempotency-Key, and typed fail-closed handling.
    * Parses text first to detect duplicate JSON keys before native JSON.parse silently overwrites them.
@@ -242,22 +254,22 @@ export class LiveArenaClient implements ArenaClient {
     endpoint: string,
     options: RequestInit & { idempotencyKey?: string; role?: Role; rawResponse?: boolean } = {}
   ): Promise<T> {
-    const url = `${this.baseUrl}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
-    const authHeaders = this.getAuthHeaders(options.role);
+    const { idempotencyKey, role, rawResponse, ...requestInit } = options;
+    const rolePrefix = backendRole(this.resolveRole(role));
+    const url = `${this.baseUrl}/${rolePrefix}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      ...authHeaders,
       ...(options.headers as Record<string, string> | undefined),
     };
 
-    if (options.idempotencyKey) {
-      headers['Idempotency-Key'] = options.idempotencyKey;
+    if (idempotencyKey) {
+      headers['Idempotency-Key'] = idempotencyKey;
     }
 
     try {
       const response = await fetch(url, {
-        ...options,
+        ...requestInit,
         headers,
       });
 
@@ -303,7 +315,7 @@ export class LiveArenaClient implements ArenaClient {
       }
 
       // For binary (ZIP) responses, return the Response object directly
-      if (options.rawResponse) {
+      if (rawResponse) {
         return response as unknown as T;
       }
 
@@ -324,8 +336,105 @@ export class LiveArenaClient implements ArenaClient {
       } catch {
         // ignore
       }
+      if (networkErr instanceof TypeError) {
+        throw new Error(
+          'No HTTP response from the local backend. Check that the admitted service is running and that BLINDSHIELD_TLS_DIR and VITE_BACKEND_URL point to its local TLS files and port.'
+        );
+      }
       throw networkErr;
     }
+  }
+
+  /** Read the backend's actual role-safe status projection without inventing UI telemetry. */
+  async getBackendStatus(experimentId: string, role?: Role): Promise<BackendExperimentStatus | { status: 'EMBARGOED' }> {
+    return this.request<BackendExperimentStatus | { status: 'EMBARGOED' }>(
+      `/experiments/${experimentId}/status`,
+      { method: 'GET', role }
+    );
+  }
+
+  /** Create only the exact request pre-registered by the running local backend. */
+  async createConfiguredExperiment(
+    request: Record<string, unknown>,
+    idempotencyKey?: string,
+    role?: Role
+  ): Promise<BackendExperimentCreated> {
+    return this.request<BackendExperimentCreated>('/experiments', {
+      method: 'POST',
+      idempotencyKey: idempotencyKey ?? generateCanonicalClientKey('create'),
+      role,
+      body: JSON.stringify(request),
+    });
+  }
+
+  /** Run a real backend lifecycle operation and wait for its terminal operation record. */
+  async runBackendLifecycleAction(
+    experimentId: string,
+    action: BackendLifecycleAction,
+    epoch: number,
+    role?: Role
+  ): Promise<{ response: unknown; operation?: unknown }> {
+    const initial = await this.request<{
+      operation_id?: string;
+      status?: string;
+      phase?: string;
+      receipt_id?: string;
+    }>(`/experiments/${experimentId}/${action}`, {
+      method: 'POST',
+      idempotencyKey: generateCanonicalClientKey(action),
+      role,
+      body: JSON.stringify({ epoch }),
+    });
+    if (!initial.operation_id) return { response: initial };
+    const operation = await this.pollOperation(experimentId, initial.operation_id, 1200, 250, role);
+    return { response: initial, operation };
+  }
+
+  async createBackendSession(experimentId: string, epoch: number, role?: Role): Promise<SessionCreated> {
+    return this.request<SessionCreated>(`/experiments/${experimentId}/sessions`, {
+      method: 'POST',
+      idempotencyKey: generateCanonicalClientKey('session'),
+      role,
+      body: JSON.stringify({ epoch }),
+    });
+  }
+
+  async submitBackendTurn(
+    experimentId: string,
+    sessionId: string,
+    request: TurnSubmissionRequest,
+    role?: Role
+  ): Promise<BackendExecutionEnvelope> {
+    return this.request<BackendExecutionEnvelope>(
+      `/experiments/${experimentId}/sessions/${sessionId}/turns`,
+      {
+        method: 'POST',
+        idempotencyKey: generateCanonicalClientKey('turn'),
+        role,
+        body: JSON.stringify(request),
+      }
+    );
+  }
+
+  async getBackendTurnStatus(
+    experimentId: string,
+    sessionId: string,
+    turnId: string,
+    role?: Role
+  ): Promise<BackendExecutionEnvelope | Record<string, unknown>> {
+    return this.request<BackendExecutionEnvelope | Record<string, unknown>>(
+      `/experiments/${experimentId}/sessions/${sessionId}/turns/${turnId}`,
+      { method: 'GET', role }
+    );
+  }
+
+  async downloadBackendEvidence(experimentId: string, role?: Role): Promise<Response> {
+    return this.request<Response>(`/experiments/${experimentId}/bundle`, {
+      method: 'GET',
+      role,
+      rawResponse: true,
+      headers: { Accept: 'application/zip' },
+    });
   }
 
   /**
@@ -337,26 +446,18 @@ export class LiveArenaClient implements ArenaClient {
     experimentId: string,
     operationId: string,
     maxAttempts: number = 30,
-    intervalMs: number = 50
-  ): Promise<{ operation_id: string; status: string; result?: unknown }> {
+    intervalMs: number = 50,
+    role?: Role
+  ): Promise<{ operation_id: string; status: string; result?: unknown; error?: string }> {
     for (let i = 0; i < maxAttempts; i++) {
-      let op: { operation_id: string; status: 'PENDING' | 'RUNNING' | 'DONE' | 'FAILED'; result?: unknown; error?: string };
-      try {
-        op = await this.request<{
-          operation_id: string;
-          status: 'PENDING' | 'RUNNING' | 'DONE' | 'FAILED';
-          result?: unknown;
-          error?: string;
-        }>(`/operations/${operationId}`);
-      } catch {
-        // Fallback to scoped route if backend mounts under experiment prefix
-        op = await this.request<{
-          operation_id: string;
-          status: 'PENDING' | 'RUNNING' | 'DONE' | 'FAILED';
-          result?: unknown;
-          error?: string;
-        }>(`/experiments/${experimentId}/operations/${operationId}`);
-      }
+      const raw = await this.request<{
+        operation_id: string;
+        status?: 'PENDING' | 'RUNNING' | 'DONE' | 'FAILED';
+        state?: 'PENDING' | 'RUNNING' | 'DONE' | 'FAILED';
+        result?: unknown;
+        error?: string;
+      }>(`/experiments/${experimentId}/operations/${operationId}`, { role });
+      const op = { ...raw, status: raw.state ?? raw.status ?? 'PENDING' };
 
       if (op.status === 'DONE') {
         return op;
@@ -370,60 +471,38 @@ export class LiveArenaClient implements ArenaClient {
   }
 
   async getExperiments(role?: Role): Promise<ExperimentStatus[]> {
-    const res = await this.request<unknown[]>('/experiments', { role });
-    return res.map((item) => ExperimentStatusSchema.parse(item));
+    void role;
+    return unsupportedLiveFeature('Experiment listing');
   }
 
   async getExperimentStatus(experimentId: string, role?: Role): Promise<ExperimentStatus> {
-    const raw = await this.request<Record<string, unknown>>(`/experiments/${experimentId}/status`, { role });
-
-    // Handle static embargo view for blue role
-    if (raw.status === 'EMBARGOED') {
-      return ExperimentStatusSchema.parse({
-        experiment_id: experimentId,
-        domain: 'EMBARGOED_DOMAIN',
-        epoch: 1,
-        state: 'RUNNING',
-        profile: 'SEALED_BATCH',
-        current_turn: 0,
-        attempts_count: 0,
-        valid_attempts_count: 0,
-        invalid_attempts_count: 0,
-        latest_digest: 'sha256:0000000000000000000000000000000000000000000000000000000000000000',
-        manifest_digest: 'sha256:0000000000000000000000000000000000000000000000000000000000000000',
-        witness_status: 'SYNCED',
-        updated_at: new Date().toISOString(),
-        delayed: true,
-        delay_label: 'EMBARGOED',
-      });
-    }
-
-    return ExperimentStatusSchema.parse(raw);
+    void experimentId;
+    void role;
+    return unsupportedLiveFeature('The UI status schema includes counters and digests that the prototype API withholds; use the raw status console');
   }
 
   async getManifest(experimentId: string, role?: Role): Promise<Manifest> {
-    const raw = await this.request<unknown>(`/experiments/${experimentId}/manifest`, { role });
-    return ManifestSchema.parse(raw);
+    void experimentId;
+    void role;
+    return unsupportedLiveFeature('Manifest retrieval');
   }
 
   async getDefenseArtifact(experimentId: string, role?: Role): Promise<DefenseArtifactInfo> {
-    const raw = await this.request<unknown>(`/experiments/${experimentId}/defense-artifact`, { role });
-    return DefenseArtifactInfoSchema.parse(raw);
+    void experimentId;
+    void role;
+    return unsupportedLiveFeature('Defense-artifact retrieval');
   }
 
   async getFeedback(experimentId: string, role?: Role): Promise<FeedbackItem[]> {
-    const activeRole = this.resolveRole(role);
-    // In live backend, active rounds return static EMBARGOED for blue
-    if (activeRole === 'blue') {
-      return [];
-    }
-    const raw = await this.request<unknown[]>(`/experiments/${experimentId}/feedback`, { role: activeRole });
-    return raw.map((item) => FeedbackItemSchema.parse(item));
+    void experimentId;
+    void role;
+    return unsupportedLiveFeature('The prototype feedback envelope does not match the full UI feedback schema');
   }
 
   async getForensics(experimentId: string, role?: Role): Promise<ReleasedEpochForensics> {
-    const raw = await this.request<unknown>(`/experiments/${experimentId}/forensics`, { role });
-    return ReleasedEpochForensicsSchema.parse(raw);
+    void experimentId;
+    void role;
+    return unsupportedLiveFeature('Forensic projections');
   }
 
   async submitAttack(
@@ -505,7 +584,7 @@ export class LiveArenaClient implements ArenaClient {
 
     // If backend returns an operation_id, poll until DONE or FAILED (PROTOTYPE-SERVICE.md)
     if (startRes.operation_id) {
-      const polled = await this.pollOperation(experimentId, startRes.operation_id);
+      const polled = await this.pollOperation(experimentId, startRes.operation_id, 30, 250, role);
       const finalResult = polled.result as { state?: LifecycleState; durable_start_receipt?: string } | undefined;
       return {
         experiment_id: experimentId,
@@ -696,11 +775,17 @@ export class LiveArenaClient implements ArenaClient {
     idempotencyKey?: string,
     role?: Role
   ): Promise<unknown> {
-    const key = idempotencyKey ?? generateCanonicalClientKey('recovery');
+    const key = idempotencyKey ?? req.idempotency_key;
+    if (key !== req.idempotency_key) {
+      const error = new Error('Recovery request and Idempotency-Key must match.') as Error & { code: string };
+      error.code = 'IDEMPOTENCY_CONFLICT';
+      throw error;
+    }
     return this.request<unknown>('/turn-feedback/recovery', {
       method: 'POST',
       idempotencyKey: key,
       role,
+      headers: { Accept: 'application/vnd.arena.feedback-replay.v1+json' },
       body: JSON.stringify(req),
     });
   }
@@ -746,51 +831,28 @@ export class LiveArenaClient implements ArenaClient {
     reason: string = 'OPERATOR_QUARANTINE',
     role?: Role
   ): Promise<{ experiment_id: string; state: 'INVALID'; reason: string; timestamp_utc: string }> {
-    const key = generateCanonicalClientKey('quarantine');
-    const epoch = this.resolveEpoch();
-
-    const raw = await this.request<{ experiment_id: string; state: 'INVALID'; reason: string; timestamp_utc: string }>(
-      `/experiments/${experimentId}/quarantine`,
-      {
-        method: 'POST',
-        idempotencyKey: key,
-        role,
-        body: JSON.stringify({ epoch, reason }),
-      }
-    );
-
-    return raw;
+    void experimentId;
+    void reason;
+    void role;
+    return unsupportedLiveFeature('Quarantine');
   }
 
   async triggerReWitness(
     experimentId: string,
     role?: Role
   ): Promise<{ experiment_id: string; witness_status: 'SYNCED' | 'LAGGING'; witness_receipt: string; timestamp_utc: string }> {
-    const key = generateCanonicalClientKey('witness');
-    const raw = await this.request<{ experiment_id: string; witness_status: 'SYNCED' | 'LAGGING'; witness_receipt: string; timestamp_utc: string }>(
-      `/experiments/${experimentId}/witness`,
-      {
-        method: 'POST',
-        idempotencyKey: key,
-        role,
-      }
-    );
-    return raw;
+    void experimentId;
+    void role;
+    return unsupportedLiveFeature('Re-witness');
   }
 
   async getEvidenceBundle(
     experimentId: string,
     role?: Role
   ): Promise<{ metadata: EvidenceBundleMetadata; ledger: ArenaEvent[]; checkpoint: Checkpoint }> {
-    const raw = await this.request<{ metadata: unknown; ledger: unknown[]; checkpoint: unknown }>(
-      `/experiments/${experimentId}/bundle`,
-      { role }
-    );
-    return {
-      metadata: EvidenceBundleMetadataSchema.parse(raw.metadata),
-      ledger: raw.ledger as ArenaEvent[],
-      checkpoint: CheckpointSchema.parse(raw.checkpoint),
-    };
+    void experimentId;
+    void role;
+    return unsupportedLiveFeature('The backend returns a ZIP evidence bundle; use the download action instead of the JSON mock bundle view');
   }
 
   subscribeEvents(
@@ -800,31 +862,17 @@ export class LiveArenaClient implements ArenaClient {
     onStatusChange?: (status: 'CONNECTED' | 'RECONNECTING' | 'CLOSED' | 'LAGGING') => void,
     _role?: Role
   ): () => void {
-    let isSubscribed = true;
-    onStatusChange?.('CONNECTED');
-
-    // Interval polling for status and events against live backend (Task 3)
-    const intervalId = setInterval(async () => {
-      if (!isSubscribed) return;
-      try {
-        const status = await this.getExperimentStatus(experimentId);
-        onStatusChange?.(status.witness_status === 'LAGGING' ? 'LAGGING' : 'CONNECTED');
-      } catch (err) {
-        onStatusChange?.('RECONNECTING');
-        onError?.(err instanceof Error ? err : new Error(String(err)));
-      }
-    }, 2500);
-
-    return () => {
-      isSubscribed = false;
-      clearInterval(intervalId);
-      onStatusChange?.('CLOSED');
-    };
+    void experimentId;
+    void _onEvent;
+    void _role;
+    onStatusChange?.('CLOSED');
+    onError?.(new Error('The prototype HTTP API does not expose an event stream.'));
+    return () => onStatusChange?.('CLOSED');
   }
 
   async runPreflight(_role?: Role): Promise<PreflightReport> {
-    const raw = await this.request<unknown>('/preflight');
-    return PreflightReportSchema.parse(raw);
+    void _role;
+    return unsupportedLiveFeature('Host admission and preflight are owner-run backend commands, not HTTP endpoints');
   }
 
   setFailureMode(mode: FailureMode): void {

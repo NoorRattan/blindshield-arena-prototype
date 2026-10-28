@@ -11,6 +11,7 @@ import { FADE_VARIANTS } from '../design/motion';
 import { cn } from '../lib/cn';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { RouteLoadingFallback } from './RouteLoadingFallback';
+import { LiveBackendConsole } from '../features/live/LiveBackendConsole';
 
 interface NavItem {
   to: string;
@@ -31,8 +32,12 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 export const AppShell: React.FC = () => {
-  const { domain, epoch, witnessStatus, connectionMode, setConnectionMode } = useArenaStore();
+  const { role, domain, epoch, witnessStatus, connectionMode, liveBackendStatus, setConnectionMode } = useArenaStore();
   const location = useLocation();
+  const visibleNavItems = connectionMode === 'live'
+    ? NAV_ITEMS.filter((item) => item.to !== '/__kit')
+    : NAV_ITEMS;
+  const liveIsConnected = connectionMode === 'live' && liveBackendStatus === 'CONNECTED';
 
   return (
     <div className="min-h-screen bg-bg text-tx font-body flex flex-col relative selection:bg-cy selection:text-bg">
@@ -60,19 +65,27 @@ export const AppShell: React.FC = () => {
             {/* Separator */}
             <div className="hidden md:block h-4 w-px bg-bd" />
 
-            {/* Domain & Witness Status */}
+          {/* Connection metadata */}
             <div className="hidden lg:flex items-center gap-3 font-mono text-[11px] text-mut">
-              <span>
-                DOMAIN: <strong className="text-tx">{domain}</strong>
-              </span>
-              <span>·</span>
-              <EpochBadge epoch={epoch} size="sm" />
-              <span>·</span>
-              <span className="flex items-center gap-1.5">
-                <span className="text-mut">WITNESS:</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-ok animate-pulse" />
-                <span className="text-ok font-bold">{witnessStatus}</span>
-              </span>
+              {connectionMode === 'live' ? (
+                <>
+                  <span>BACKEND: <strong className="text-tx">LOOPBACK mTLS</strong></span>
+                  <span>·</span>
+                  <span>WITNESS: <strong className="text-am">NIL</strong></span>
+                </>
+              ) : (
+                <>
+                  <span>DOMAIN: <strong className="text-tx">{domain}</strong></span>
+                  <span>·</span>
+                  <EpochBadge epoch={epoch} size="sm" />
+                  <span>·</span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="text-mut">WITNESS:</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-ok animate-pulse" />
+                    <span className="text-ok font-bold">{witnessStatus}</span>
+                  </span>
+                </>
+              )}
             </div>
           </div>
 
@@ -82,28 +95,28 @@ export const AppShell: React.FC = () => {
             <button
               type="button"
               data-testid="connection-mode-toggle"
-              onClick={() =>
-                setConnectionMode(connectionMode === 'simulated' ? 'live' : 'simulated')
-              }
+              onClick={() => setConnectionMode('live')}
               title={`Operating Mode: ${
                 connectionMode === 'simulated'
                   ? 'SIMULATED DATA (In-Memory Sandbox). Click to switch to Live Backend.'
-                  : 'LIVE BACKEND (Fail-Closed mTLS Connection). Click to switch to Simulated Mode.'
+                  : 'LOCAL LIVE API mode. mTLS is confirmed only after a successful backend response. Simulation is disabled in this submission.'
               }`}
               className={cn(
                 'px-2 py-0.5 rounded-[2px] font-mono text-[10px] font-bold tracking-wider flex items-center gap-1.5 border transition-colors select-none',
                 connectionMode === 'simulated'
                   ? 'bg-am/15 text-am border-am/40 hover:bg-am/25'
-                  : 'bg-ok/15 text-ok border-ok/40 hover:bg-ok/25'
+                  : liveIsConnected
+                    ? 'bg-ok/15 text-ok border-ok/40 hover:bg-ok/25'
+                    : 'bg-am/15 text-am border-am/40 hover:bg-am/25'
               )}
             >
               <span
                 className={cn(
                   'w-1.5 h-1.5 rounded-full',
-                  connectionMode === 'simulated' ? 'bg-am' : 'bg-ok animate-pulse'
+                  connectionMode === 'simulated' || !liveIsConnected ? 'bg-am' : 'bg-ok animate-pulse'
                 )}
               />
-              <span>{connectionMode === 'simulated' ? 'SIMULATED DATA' : 'LIVE BACKEND'}</span>
+              <span>{connectionMode === 'simulated' ? 'SIMULATED DATA' : liveIsConnected ? 'mTLS CONNECTED' : 'LIVE · FAIL CLOSED'}</span>
             </button>
 
             <RoleSwitcher />
@@ -131,7 +144,7 @@ export const AppShell: React.FC = () => {
           className="border-t border-bd/60 bg-s2/30 font-mono text-xs overflow-x-auto"
         >
           <div className="max-w-[1440px] mx-auto px-4 sm:px-6 flex items-center gap-1">
-            {NAV_ITEMS.map((item) => (
+            {visibleNavItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
@@ -165,7 +178,7 @@ export const AppShell: React.FC = () => {
               exit="exit"
             >
               <React.Suspense fallback={<RouteLoadingFallback />}>
-                <Outlet />
+                {connectionMode === 'live' ? <LiveBackendConsole key={role} /> : <Outlet />}
               </React.Suspense>
             </motion.div>
           </AnimatePresence>
@@ -174,27 +187,30 @@ export const AppShell: React.FC = () => {
 
       {/* Operator & Auditor Assured Footer */}
       <footer className="border-t border-bd bg-s1/80 backdrop-blur-sm text-mut font-mono text-[11px] py-3 select-none">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-3">
-            <span>
-              TCB <strong className="text-tx">v0.4.2</strong>
-            </span>
-            <span className="text-mut">·</span>
-            <span>
-              PINNED MODEL: <strong className="text-tx">llama-3.1-8b-instruct</strong>
-            </span>
-            <span className="text-mut">·</span>
-            <span>
-              BROKER OVERHEAD: <strong className="text-ok">38ms</strong> (p95 ≤ 100ms)
-            </span>
+          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 flex flex-wrap items-center justify-between gap-3">
+            {connectionMode === 'live' ? (
+              <div className="flex flex-wrap items-center gap-3">
+                <span>LIVE SCOPE: <strong className="text-tx">LOCAL PROTOTYPE API</strong></span>
+                <span>·</span>
+                <span>TELEMETRY: <strong className="text-am">NIL</strong></span>
+              </div>
+            ) : (
+              <>
+                <div className="flex flex-wrap items-center gap-3">
+                  <span>TCB <strong className="text-tx">v0.4.2</strong></span>
+                  <span className="text-mut">·</span>
+                  <span>PINNED MODEL: <strong className="text-tx">llama-3.1-8b-instruct</strong></span>
+                  <span className="text-mut">·</span>
+                  <span>BROKER OVERHEAD: <strong className="text-ok">38ms</strong> (p95 ≤ 100ms)</span>
+                </div>
+                <div className="flex items-center gap-3 text-mut text-[10px]">
+                  <span>TELEMETRY: DELAYED T-30s</span>
+                  <span>·</span>
+                  <span className="text-cy">ASSURANCE GRADE: TAMPER-EVIDENT</span>
+                </div>
+              </>
+            )}
           </div>
-
-          <div className="flex items-center gap-3 text-mut text-[10px]">
-            <span>TELEMETRY: DELAYED T-30s</span>
-            <span>·</span>
-            <span className="text-cy">ASSURANCE GRADE: TAMPER-EVIDENT</span>
-          </div>
-        </div>
       </footer>
 
       {/* Global Command Palette */}

@@ -4,7 +4,7 @@ This is a single-host offline prototype with three isolated CPU model cells. Ste
 
 The Windows and Linux profiles under infra/prototype are dated host-specific artifacts. This history-free snapshot must be initialized and committed in Git before running gates because source identity is derived from committed bytes and ancestry. Its included grants bind the earlier candidate and cannot be reused. A new source root or machine needs owner-provisioned assets, authorities, admission, and calibration. This public snapshot does not include model weights, prepared corpus, private keys, raw run stores, or external rollback-anchor state.
 
-Use PROTOTYPE-RELEASE.md for the bounded demo and verification commands. The frontend is a separate mock UI and is not connected to this service.
+Use PROTOTYPE-RELEASE.md for the bounded demo and verification commands. The frontend includes a local mTLS console that connects through the Vite development proxy. In this source snapshot, browser-level verification covers the N03 control-plane operations exposed here; owner-managed admission and model-backed session workflows have not been verified end to end.
 ## Authority and preparation
 
 Run commands from backend using .venv/Scripts/python.exe. Selected model/image pins and publisher observations are under infra/model-component/. The actual model weights and OCI image bytes are owner-provisioned and are not included. Runtime never downloads.

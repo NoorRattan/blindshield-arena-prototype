@@ -31,10 +31,10 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({ className }) => {
       {isLive ? (
         <span
           className="hidden md:flex items-center gap-1 px-1.5 py-0.5 rounded bg-ok/10 border border-ok/30 text-ok text-[10px] font-bold uppercase tracking-wider"
-          title="Role derived from authenticated mTLS client certificate — client-side switching restricted"
+          title="The local Vite proxy presents this role's client certificate; the backend authenticates each request."
         >
           <Lock className="w-3 h-3 stroke-[2]" />
-          <span>mTLS CERTIFICATE</span>
+          <span>LOCAL mTLS ROUTE</span>
         </span>
       ) : (
         <span
@@ -64,7 +64,7 @@ export const RoleSwitcher: React.FC<RoleSwitcherProps> = ({ className }) => {
               aria-pressed={isActive}
               title={
                 isDisabled
-                  ? `Locked: mTLS certificate authenticated as '${authenticatedPrincipal?.role}'`
+                  ? `Locked: this page is bound to '${authenticatedPrincipal?.role}'`
                   : `${r.label}: ${r.desc}`
               }
               className={cn(

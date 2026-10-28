@@ -73,19 +73,13 @@ const getInitialRole = (): UserRole => {
   return 'operator';
 };
 
-const getInitialConnectionMode = (): ConnectionMode => {
-  const stored = safeGetStorage('blindshield_connection_mode') as ConnectionMode;
-  if (stored === 'simulated' || stored === 'live') {
-    return stored;
-  }
-  return 'simulated';
-};
+const getInitialConnectionMode = (): ConnectionMode => 'live';
 
 export const useArenaStore = create<ArenaState>((set, get) => ({
   role: getInitialRole(),
-  domain: 'BAYORA-PROD-01',
-  epoch: 4,
-  witnessStatus: 'SYNCED',
+  domain: 'NIL',
+  epoch: 1,
+  witnessStatus: 'PENDING',
   failureMode: 'none',
   theme: 'dark',
   connectionMode: getInitialConnectionMode(),
@@ -102,14 +96,9 @@ export const useArenaStore = create<ArenaState>((set, get) => ({
     safeSetStorage('blindshield_role', role);
     set({ role });
   },
-  setConnectionMode: (connectionMode) => {
-    safeSetStorage('blindshield_connection_mode', connectionMode);
-    if (connectionMode === 'live') {
-      // In live mode, default status is FAIL_CLOSED until a verified live backend response is received
-      set({ connectionMode, liveBackendStatus: 'FAIL_CLOSED' });
-    } else {
-      set({ connectionMode, liveBackendStatus: 'DISCONNECTED' });
-    }
+  setConnectionMode: () => {
+    safeSetStorage('blindshield_connection_mode', 'live');
+    set({ connectionMode: 'live', liveBackendStatus: 'FAIL_CLOSED' });
   },
   setLiveBackendStatus: (liveBackendStatus) => set({ liveBackendStatus }),
   setAuthenticatedPrincipal: (authenticatedPrincipal) => {

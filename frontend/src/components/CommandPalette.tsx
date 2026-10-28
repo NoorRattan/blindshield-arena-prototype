@@ -137,13 +137,6 @@ export const CommandPalette: React.FC = () => {
     },
     // Modes
     {
-      id: 'mode-simulated',
-      category: 'Mode',
-      title: 'Switch to Simulated Mode (In-Memory Demo)',
-      action: () => setConnectionMode('simulated'),
-      icon: UserCheck,
-    },
-    {
       id: 'mode-live',
       category: 'Mode',
       title: 'Switch to Live Backend Mode (Fail-Closed)',

@@ -670,4 +670,4 @@ export class DynamicArenaClient implements ArenaClient {
  * Singleton client instance used throughout the frontend.
  * Dynamically dispatches to LiveArenaClient or MockArenaClient according to connectionMode.
  */
-export const arenaClient: ArenaClient = new DynamicArenaClient();
+export const arenaClient: ArenaClient = new LiveArenaClient();

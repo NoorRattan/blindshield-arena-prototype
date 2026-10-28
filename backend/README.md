@@ -2,7 +2,7 @@
 
 BlindShield Arena's backend is a local prototype with three isolated CPU model lanes, an authenticated loopback mTLS API, encrypted artifacts, recorder/witness evidence, bounded recovery, and an independent offline verifier.
 
-It is a bounded prototype with known acceptance gaps. It has not passed every T/P target and is not a production service. The frontend now includes a live HTTP adapter alongside its simulated UI, but browser-to-backend mTLS integration remains unverified. See the root evaluator guide for the supported review path.
+It is a bounded prototype with known acceptance gaps. It has not passed every T/P target and is not a production service. The frontend includes a loopback mTLS proxy and a live API console. Browser-to-Python N03 control-plane traffic was smoke-tested using disposable local credentials; the check made no model calls and does not validate the separately admitted N04 service from the browser. See the root evaluator guide for the supported review path.
 
 ## Setup and demo
 

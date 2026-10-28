@@ -10,30 +10,13 @@ import { useArenaStore } from '../state/useArenaStore';
  * with mandatory mutual TLS (see backend/src/arena/broker/server.py: tls_context, dispatch).
  * Standard web browsers cannot initiate raw mTLS handshakes from clientside JS without
  * either a local HTTPS reverse proxy or platform-provisioned client certs.
- * Furthermore, in the frontend test environment (Node/Vitest), starting the full Python
- * multiprocessing kernel with sandboxed Docker containers is outside the scope of frontend tests.
+ * Browser requests use role-scoped local proxy paths; the proxy presents the backend's
+ * role-bound certificate and the backend authenticates every request from that certificate.
  *
  * This integration suite therefore tests LiveArenaClient's full protocol fidelity, wire serialization,
- * mTLS header propagation, fail-closed state machines, idempotency keys, duplicate-key detection,
+ * role-scoped mTLS proxy routing, fail-closed state machines, idempotency keys, duplicate-key detection,
  * and lifecycle transitions against a backend-compliant mock transport.
  */
-
-const MOCK_LIVE_EXPERIMENT = {
-  experiment_id: 'exp_live_01',
-  domain: 'BAYORA-PROD-01',
-  epoch: 1,
-  state: 'RUNNING',
-  profile: 'SEALED_BATCH',
-  current_turn: 1,
-  attempts_count: 5,
-  valid_attempts_count: 4,
-  invalid_attempts_count: 1,
-  latest_digest: 'sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
-  manifest_digest: 'sha256:fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210',
-  witness_status: 'SYNCED',
-  updated_at: '2026-10-28T12:00:00Z',
-  delayed: false,
-};
 
 describe('LiveArenaClient & Lifecycle Integration Test Suite (Task 2, 3, 4, 6)', () => {
   let client: LiveArenaClient;
@@ -45,15 +28,7 @@ describe('LiveArenaClient & Lifecycle Integration Test Suite (Task 2, 3, 4, 6)',
       liveBackendStatus: 'CONNECTED',
       epoch: 1,
       role: 'operator',
-      authenticatedPrincipal: {
-        subject_id: 'operator-root-01',
-        role: 'operator',
-        domain_id: 'BAYORA-PROD-01',
-        expires_at: '2026-10-29T12:00:00Z',
-        subject: 'CN=operator-root-01,O=BlindShield,C=US',
-        certFingerprint: 'sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
-        is_mtls_verified: true,
-      },
+      authenticatedPrincipal: null,
     });
     client = new LiveArenaClient();
   });
@@ -63,7 +38,7 @@ describe('LiveArenaClient & Lifecycle Integration Test Suite (Task 2, 3, 4, 6)',
     vi.restoreAllMocks();
   });
 
-  // ─── Task 2 & 3: Idempotency & Auth Headers ───────────────────────────────────
+  // ─── Task 2 & 3: Idempotency & mTLS role routing ─────────────────────────────
 
   it('generates canonical ASCII idempotency keys matching ^[!-~]{1,128}$', () => {
     for (let i = 0; i < 20; i++) {
@@ -76,29 +51,47 @@ describe('LiveArenaClient & Lifecycle Integration Test Suite (Task 2, 3, 4, 6)',
     }
   });
 
-  it('dispatches authenticated request with mTLS and role headers to /v1/experiments', async () => {
+  it('routes the registered create request through the operator certificate without identity headers', async () => {
     let capturedUrl = '';
     let capturedHeaders: Record<string, string> = {};
+    let capturedBody = '';
 
     globalThis.fetch = vi.fn().mockImplementation(async (url: string, init?: RequestInit) => {
       capturedUrl = url;
       capturedHeaders = (init?.headers as Record<string, string>) || {};
+      capturedBody = init?.body as string;
       return {
         ok: true,
-        status: 200,
-        text: async () => JSON.stringify([MOCK_LIVE_EXPERIMENT]),
-        json: async () => [MOCK_LIVE_EXPERIMENT],
+        status: 201,
+        text: async () => JSON.stringify({
+          domain_id: '11111111-1111-4111-8111-111111111111',
+          experiment_id: '22222222-2222-4222-8222-222222222222',
+          epoch: 1,
+          phase: 'CREATED',
+        }),
       } as Response;
     });
 
-    const experiments = await client.getExperiments('operator');
-    expect(capturedUrl).toBe('/v1/experiments');
-    expect(capturedHeaders['x-arena-role']).toBe('operator');
-    expect(capturedHeaders['x-client-cert-sha256']).toBe(
-      'sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
-    );
-    expect(experiments).toHaveLength(1);
-    expect(experiments[0].domain).toBe('BAYORA-PROD-01');
+    const request = {
+      profile_id: 'registered-profile',
+      model_version_id: 'registered-model',
+      defense_version_id: 'registered-defense',
+      rubric_version_id: 'registered-rubric',
+      disclosure_profile_id: 'SEALED_BATCH',
+      interaction_mode: 'INTERACTIVE',
+      defense_mode: 'INPUT',
+      dataset_catalog_id: 'registered-dataset',
+      strategy_version_id: 'registered-strategy',
+      budget_profile_id: 'registered-budget',
+    };
+    const created = await client.createConfiguredExperiment(request, 'create-test-key', 'operator');
+    expect(capturedUrl).toBe('/v1/operator/experiments');
+    expect(capturedHeaders['Idempotency-Key']).toBe('create-test-key');
+    expect(capturedHeaders['Content-Type']).toBe('application/json');
+    expect(capturedHeaders['x-arena-role']).toBeUndefined();
+    expect(capturedHeaders['x-client-cert-sha256']).toBeUndefined();
+    expect(JSON.parse(capturedBody)).toEqual(request);
+    expect(created.phase).toBe('CREATED');
   });
 
   // ─── Task 3: Lifecycle Methods ────────────────────────────────────────────────
@@ -227,7 +220,7 @@ describe('LiveArenaClient & Lifecycle Integration Test Suite (Task 2, 3, 4, 6)',
     });
 
     const receipt = await client.sealExperiment('exp_live_01', 'operator');
-    expect(capturedUrl).toBe('/v1/experiments/exp_live_01/seal');
+    expect(capturedUrl).toBe('/v1/operator/experiments/exp_live_01/seal');
     expect(capturedHeaders['Idempotency-Key']).toBeDefined();
     expect(JSON.parse(capturedBody).epoch).toBe(1);
     expect(receipt.phase).toBe('SEALED');
@@ -236,7 +229,7 @@ describe('LiveArenaClient & Lifecycle Integration Test Suite (Task 2, 3, 4, 6)',
 
   it('wires finishExperiment (POST /experiments/{id}/finish) returning PhaseReceipt', async () => {
     globalThis.fetch = vi.fn().mockImplementation(async (url: string) => {
-      expect(url).toBe('/v1/experiments/exp_live_01/finish');
+      expect(url).toBe('/v1/operator/experiments/exp_live_01/finish');
       return {
         ok: true,
         status: 200,
@@ -257,7 +250,7 @@ describe('LiveArenaClient & Lifecycle Integration Test Suite (Task 2, 3, 4, 6)',
 
   it('wires releaseExperiment (POST /experiments/{id}/release) returning PhaseReceipt', async () => {
     globalThis.fetch = vi.fn().mockImplementation(async (url: string) => {
-      expect(url).toBe('/v1/experiments/exp_live_01/release');
+      expect(url).toBe('/v1/operator/experiments/exp_live_01/release');
       return {
         ok: true,
         status: 200,
@@ -278,7 +271,7 @@ describe('LiveArenaClient & Lifecycle Integration Test Suite (Task 2, 3, 4, 6)',
 
   it('wires createSession (POST /experiments/{id}/sessions) returning SessionCreated', async () => {
     globalThis.fetch = vi.fn().mockImplementation(async (url: string, init?: RequestInit) => {
-      expect(url).toBe('/v1/experiments/exp_live_01/sessions');
+      expect(url).toBe('/v1/operator/experiments/exp_live_01/sessions');
       expect(init?.method).toBe('POST');
       return {
         ok: true,
@@ -300,7 +293,7 @@ describe('LiveArenaClient & Lifecycle Integration Test Suite (Task 2, 3, 4, 6)',
   it('wires submitTurn (POST /experiments/{id}/sessions/{sessionId}/turns)', async () => {
     let capturedBody = '';
     globalThis.fetch = vi.fn().mockImplementation(async (url: string, init?: RequestInit) => {
-      expect(url).toBe('/v1/experiments/exp_live_01/sessions/sess-01/turns');
+      expect(url).toBe('/v1/red/experiments/exp_live_01/sessions/sess-01/turns');
       capturedBody = init?.body as string;
       return {
         ok: true,
@@ -324,7 +317,7 @@ describe('LiveArenaClient & Lifecycle Integration Test Suite (Task 2, 3, 4, 6)',
       epoch: 1,
       turn_index: 2,
       text: 'Admitted adversarial probe prompt',
-    });
+    }, undefined, 'red');
 
     expect(JSON.parse(capturedBody).turn_index).toBe(2);
     expect(turn.status).toBe('DONE');
@@ -334,7 +327,7 @@ describe('LiveArenaClient & Lifecycle Integration Test Suite (Task 2, 3, 4, 6)',
 
   it('wires cancelSession (POST /experiments/{id}/sessions/{sessionId}/cancel)', async () => {
     globalThis.fetch = vi.fn().mockImplementation(async (url: string) => {
-      expect(url).toBe('/v1/experiments/exp_live_01/sessions/sess-01/cancel');
+      expect(url).toBe('/v1/red/experiments/exp_live_01/sessions/sess-01/cancel');
       return {
         ok: true,
         status: 200,
@@ -346,13 +339,13 @@ describe('LiveArenaClient & Lifecycle Integration Test Suite (Task 2, 3, 4, 6)',
       } as Response;
     });
 
-    const res = await client.cancelSession('exp_live_01', 'sess-01');
+    const res = await client.cancelSession('exp_live_01', 'sess-01', undefined, 'red');
     expect(res.status).toBe('CANCELLED');
   });
 
   it('wires downloadEvidenceBundleZip returning raw binary Response', async () => {
     globalThis.fetch = vi.fn().mockImplementation(async (url: string, init?: RequestInit) => {
-      expect(url).toBe('/v1/experiments/exp_live_01/bundle');
+      expect(url).toBe('/v1/auditor/experiments/exp_live_01/bundle');
       expect((init?.headers as Record<string, string>)?.Accept).toBe('application/zip');
       return {
         ok: true,
@@ -382,12 +375,11 @@ describe('LiveArenaClient & Lifecycle Integration Test Suite (Task 2, 3, 4, 6)',
     });
 
     const res = await client.submitFeedbackRecovery({
-      epoch: 1,
       turn_id: 'turn-rec-01',
-      original_client_key: 'req-orig-123',
-    });
+      idempotency_key: 'req-orig-123',
+    }, undefined, 'red');
 
-    expect(capturedUrl).toBe('/v1/turn-feedback/recovery');
+    expect(capturedUrl).toBe('/v1/red/turn-feedback/recovery');
     expect((res as { reconciled: boolean }).reconciled).toBe(true);
   });
 
@@ -445,7 +437,9 @@ describe('LiveArenaClient & Lifecycle Integration Test Suite (Task 2, 3, 4, 6)',
           commitment: 'sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
           nonce: '0123456789abcdef0123456789abcdef',
         },
-        'idemp-duplicate'
+        'idemp-duplicate',
+        1,
+        'red'
       )
     ).rejects.toMatchObject({
       code: 'IDEMPOTENCY_CONFLICT',
@@ -468,7 +462,7 @@ describe('LiveArenaClient & Lifecycle Integration Test Suite (Task 2, 3, 4, 6)',
       } as Response;
     });
 
-    await expect(client.getExperiments('operator')).rejects.toMatchObject({
+    await expect(client.getBackendStatus('exp_live_01', 'operator')).rejects.toMatchObject({
       code: 'FORBIDDEN',
     });
 
@@ -481,8 +475,8 @@ describe('LiveArenaClient & Lifecycle Integration Test Suite (Task 2, 3, 4, 6)',
       throw new TypeError('Failed to fetch: Connection refused');
     });
 
-    await expect(client.getExperiments('operator')).rejects.toThrow(
-      /Failed to fetch/
+    await expect(client.getBackendStatus('exp_live_01', 'operator')).rejects.toThrow(
+      /No HTTP response from the local backend/
     );
 
     expect(useArenaStore.getState().liveBackendStatus).toBe('FAIL_CLOSED');
@@ -546,32 +540,25 @@ describe('LiveArenaClient & Lifecycle Integration Test Suite (Task 2, 3, 4, 6)',
       },
     });
 
-    globalThis.fetch = vi.fn().mockImplementation(async () => {
+    globalThis.fetch = vi.fn().mockImplementation(async (url: string) => {
+      expect(url).toBe('/v1/auditor/experiments/22222222-2222-4222-8222-222222222222/status');
       return {
         ok: true,
         status: 200,
-        text: async () => JSON.stringify([
-          {
-            ...MOCK_LIVE_EXPERIMENT,
-            experiment_id: 'exp_live_audit_01',
-            domain: 'BAYORA-LIVE-AUDIT',
-            epoch: 2,
-            state: 'CLOSED',
-          },
-        ]),
-        json: async () => [
-          {
-            ...MOCK_LIVE_EXPERIMENT,
-            experiment_id: 'exp_live_audit_01',
-            domain: 'BAYORA-LIVE-AUDIT',
-            epoch: 2,
-            state: 'CLOSED',
-          },
-        ],
+        text: async () => JSON.stringify({
+          domain_id: '33333333-3333-4333-8333-333333333333',
+          experiment_id: '22222222-2222-4222-8222-222222222222',
+          epoch: 2,
+          phase: 'CLOSED',
+          integrity: 'VALID_WITHIN_PROFILE',
+        }),
       } as Response;
     });
 
-    const liveExp = await dynamicClient.getExperiments('auditor');
-    expect(liveExp[0].domain).toBe('BAYORA-LIVE-AUDIT');
+    const liveStatus = await dynamicClient.liveClient.getBackendStatus(
+      '22222222-2222-4222-8222-222222222222',
+      'auditor'
+    );
+    expect(liveStatus).toMatchObject({ phase: 'CLOSED', integrity: 'VALID_WITHIN_PROFILE' });
   });
 });

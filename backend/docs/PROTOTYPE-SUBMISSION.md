@@ -16,7 +16,7 @@
 
 The prepared-host receipt records six real-model calibration calls, six authenticated demo calls, an independent offline verifier exit code of 0, and cleanup on the same Windows laptop with Docker Desktop. It is not independent-hardware evidence, full T/P acceptance, or a production guarantee.
 
-The historical frontend E2E receipt records 96 passed cases across desktop and mobile projects before the new frontend delivery. It does not validate the new code. Current checks are recorded separately in the root evaluator guide. Frontend integration tests use a mocked transport and do not establish browser-to-backend mTLS interoperability.
+The historical frontend E2E receipt records 96 passed cases across desktop and mobile projects before the new frontend delivery. It does not validate the new code. Current checks are recorded separately in the root evaluator guide. A later local browser smoke verified mTLS proxy interoperability with a disposable N03 control-plane fixture (create, seal, role-scoped status/embargo; zero model calls). It does not validate the separately admitted N04 model service from the browser. The Vitest client tests still use a mocked transport.
 
 Three memory/registry-specific test modules are excluded from this public source snapshot because they require private project memory and registry fixtures. The documented public test command skips those modules; its result is not full acceptance.
 

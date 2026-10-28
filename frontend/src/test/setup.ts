@@ -102,3 +102,15 @@ try {
 } catch {
   // ignore
 }
+
+// Historical visual component tests explicitly inject their in-memory fixture.
+// Production exports remain LiveArenaClient; no runtime simulation switch exists.
+import { beforeEach, vi } from 'vitest';
+import { useArenaStore } from '../state/useArenaStore';
+vi.mock('../lib/api/client', async () => {
+  const actual = await vi.importActual<typeof import('../lib/api/client')>('../lib/api/client');
+  return { ...actual, arenaClient: new actual.DynamicArenaClient() };
+});
+beforeEach(() => {
+  useArenaStore.setState({ connectionMode: 'simulated', domain: 'BAYORA-PROD-01', epoch: 4, witnessStatus: 'SYNCED' });
+});
